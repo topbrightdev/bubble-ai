@@ -55,6 +55,12 @@ def start_single_player_level_menu():
     start_load_level_menu()
 
 
+def start_ai_player_level_menu():
+    game.is_multiplayer = False
+    game.is_ai = True
+    start_load_level_menu()
+
+
 def start_multiplayer_level_menu():
     game.is_multiplayer = True
     start_load_level_menu()
@@ -72,6 +78,7 @@ main_menu = Menu(
     screen, OrderedDict(
         [('Single Player', start_single_player_level_menu),
             ('Two Players', start_multiplayer_level_menu),
+            ('AI Player', start_ai_player_level_menu),
             ('Quit', quit_game)]
     )
 )
@@ -156,6 +163,8 @@ def draw_world():
 
 
 def handle_game_event():
+    if game.is_ai:
+        handle_ai_game_event()
     for event in pygame.event.get():
         if event.type == KEYDOWN:
             if event.key == K_LEFT:
@@ -186,6 +195,13 @@ def handle_game_event():
                     game.players[1].moving_right = False
         if event.type == QUIT:
             quit_game()
+
+
+def handle_ai_game_event():
+    game.players[0].moving_left = random.getrandbits(1)
+    game.players[0].moving_right = random.getrandbits(1)
+    if random.getrandbits(1) and not game.players[0].weapon.is_active:
+        game.players[0].shoot()
 
 
 def handle_menu_event(menu):
