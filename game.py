@@ -11,6 +11,7 @@ from bonuses import *
 class Game:
 
     def __init__(self, level=1):
+        self.score = 0
         self.balls = []
         self.hexagons = []
         self.players = [Player()]
@@ -32,6 +33,12 @@ class Game:
                 self.max_level_available = int(max_level_available)
             else:
                 self.max_level_available = 1
+
+    def add_to_score(self, to_add):
+        self.score += to_add
+
+    def get_score(self):
+        return self.score
 
     def load_level(self, level):
         self.is_restarted = True
@@ -84,6 +91,7 @@ class Game:
         for bubble_index, bubble in enumerate(bubbles):
             if pygame.sprite.collide_rect(bubble, player.weapon) \
                     and player.weapon.is_active:
+                self.add_to_score(50)
                 player.weapon.is_active = False
                 if is_ball:
                     self._split_ball(bubble_index)
@@ -199,3 +207,6 @@ class Game:
         if self.time_left == 0:
             for player in self.players:
                 self._decrease_lives(player)
+
+    def get_time_left(self):
+        return self.time_left

@@ -116,6 +116,13 @@ def draw_timer():
     screen.blit(timer, rect)
 
 
+def draw_score():
+    score = font.render("score: " + str(game.get_score()), 1, BLUE)
+    rect = score.get_rect()
+    rect.topright = WINDOWWIDTH - 10, 10
+    screen.blit(score, rect)
+
+
 def draw_players_lives(player, is_main_player=True):
     player_image = pygame.transform.scale(player.image, (20, 20))
     rect = player_image.get_rect()
@@ -143,13 +150,16 @@ def draw_world():
     for bonus in game.bonuses:
         draw_bonus(bonus)
     draw_timer()
+    draw_score()
     if game.game_over:
         draw_message('Game over!', RED)
         start_main_menu()
     if game.is_completed:
+        game.add_to_score(10*game.get_time_left())
         draw_message('Congratulations! You win!!!', PURPLE)
         start_main_menu()
     if game.level_completed and not game.is_completed:
+        game.add_to_score(10*game.get_time_left())
         draw_message('Well done! Level completed!', BLUE)
     if game.is_restarted:
         draw_message('Get ready!', BLUE)
