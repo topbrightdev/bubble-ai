@@ -20,8 +20,9 @@ class Game:
         self.level_completed = False
         self.is_running = True
         self.is_completed = False
-        self.max_level = MAX_LEVEL
+        self.max_level = MAX_LEVEL # TODO change if we want to add levels
         self.is_multiplayer = False
+        self.is_ai = False
         self.is_restarted = False
         self.dead_player = False
         self.mode = 'Classic'
