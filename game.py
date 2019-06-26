@@ -2,10 +2,17 @@ import sys
 from threading import Timer
 import random
 import json
+import copy
 
 from bubbles import *
 from player import *
 from bonuses import *
+from copy import copy, deepcopy
+
+MOVE_LEFT = 'left'
+MOVE_RIGHT = 'right'
+SHOOT = 'shoot'
+ACTION_LIST = [MOVE_LEFT, MOVE_RIGHT, SHOOT]
 
 
 class Game:
@@ -211,3 +218,42 @@ class Game:
 
     def get_time_left(self):
         return self.time_left
+
+    def deep_copy_game(self): # TODO check if ok
+        game_copy = copy(self)
+        game_copy.balls = copy(self.balls)
+        game_copy.hexagons = copy(self.hexagons)
+
+        ## Deep Copy for player 0
+        player_copy = copy(self.players[0])
+        player_copy.rect = deepcopy(player_copy.rect)
+        # TODO check if deep needed
+        player_copy.weapon = copy(player_copy.weapon)
+        game_copy.players = [player_copy]
+
+        # TODO check if deep needed
+        game_copy.bonuses = copy(self.bonuses)
+        for bonus in game_copy.bonuses:
+            bonus.rect = deepcopy(bonus.rect)
+        return game_copy
+
+    def get_successors(self):
+        # TODO maybe update X times faster (by increase speed, at astar)
+        successors_list = []
+        for action in ACTION_LIST:
+            successor = self.deep_copy_game()
+            if action == MOVE_RIGHT:
+                successor.players[0].moving_right = True
+                successor.update()
+                successor.players[0].moving_right = False
+            elif action == MOVE_LEFT:
+                successor.players[0].moving_left = True
+                successor.update()
+                successor.players[0].moving_left = False
+            elif action == SHOOT and not successor.players[0].weapon.is_active:
+                successor.players[0].shoot()
+                successor.update()
+
+            successors_list.append(successor)
+
+        return successors_list
