@@ -170,6 +170,8 @@ class Game:
             self.bonuses.append(bonus)
 
     def update(self):
+        if self.level_completed:
+            self.add_to_score(10 * self.get_time_left())
         if self.level_completed and not self.is_completed:
             self.load_level(self.level + 1)
         if self.game_over:

@@ -34,6 +34,7 @@ def start_level(level):
 
 
 def start_main_menu():
+    main_menu.is_active = True
     while main_menu.is_active:
         main_menu.draw()
         handle_menu_event(main_menu)
@@ -162,11 +163,11 @@ def draw_world():
         draw_message('Game over!', RED)
         start_main_menu()
     if game.is_completed:
-        game.add_to_score(10*game.get_time_left())
         draw_message('Congratulations! You win!!!', PURPLE)
+        pygame.display.update()
+        pygame.time.delay(3000)
         start_main_menu()
     if game.level_completed and not game.is_completed:
-        game.add_to_score(10*game.get_time_left())
         draw_message('Well done! Level completed!', BLUE)
     if game.is_restarted:
         draw_message('Get ready!', BLUE)
