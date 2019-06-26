@@ -244,14 +244,14 @@ class Game:
         successors_list = []
         for action in ACTION_LIST:
             successor = self.deep_copy_game()
-            if action == MOVE_RIGHT:
-                successor.players[0].moving_right = True
-                successor.update()
-                successor.players[0].moving_right = False
-            elif action == MOVE_LEFT:
+            if action == MOVE_LEFT:
                 successor.players[0].moving_left = True
                 successor.update()
                 successor.players[0].moving_left = False
+            elif action == MOVE_RIGHT:
+                successor.players[0].moving_right = True
+                successor.update()
+                successor.players[0].moving_right = False
             elif action == SHOOT and not successor.players[0].weapon.is_active:
                 successor.players[0].shoot()
                 successor.update()
