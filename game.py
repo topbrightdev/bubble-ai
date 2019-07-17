@@ -7,12 +7,13 @@ import copy
 from bubbles import *
 from player import *
 from bonuses import *
-from copy import copy, deepcopy
+
 
 MOVE_LEFT = 'left'
 MOVE_RIGHT = 'right'
 SHOOT = 'shoot'
 ACTION_LIST = [MOVE_LEFT, MOVE_RIGHT, SHOOT]
+LOOP_AT_EACH_SUCCESSOR_UPDATES = 4
 
 
 class Game:
@@ -41,6 +42,13 @@ class Game:
                 self.max_level_available = int(max_level_available)
             else:
                 self.max_level_available = 1
+
+    def __lt__(self, other):
+        # TODO implement better
+        if bool(random.getrandbits(1)):
+            return self.get_score() < other.get_score()
+        else:
+            return self.get_score() <= other.get_score()
 
     def add_to_score(self, to_add):
         self.score += to_add
@@ -223,20 +231,30 @@ class Game:
 
     def deep_copy_game(self): # TODO check if ok
         game_copy = copy(self)
-        game_copy.balls = copy(self.balls)
-        game_copy.hexagons = copy(self.hexagons)
 
-        ## Deep Copy for player 0
+        # TODO check if deep working
+        game_copy.balls = []
+        for ball in self.balls:
+            game_copy.balls.append(ball.deep_copy_bubble())
+        game_copy.hexagons = []
+        for hexagon in self.hexagons:
+            game_copy.hexagons.append(hexagon.deep_copy_bubble())
+            game_copy.players = []
+        # TODO
+        game_copy.players = []
+        for player in self.players:
+            game_copy.players.append(player.deep_copy_player())
+        #TODO
+        game_copy.bonuses = []
+        for bonus in self.bonuses:
+            game_copy.players.append(bonus.deep_copy_bonus())
+
         player_copy = copy(self.players[0])
         player_copy.rect = deepcopy(player_copy.rect)
         # TODO check if deep needed
         player_copy.weapon = copy(player_copy.weapon)
         game_copy.players = [player_copy]
 
-        # TODO check if deep needed
-        game_copy.bonuses = copy(self.bonuses)
-        for bonus in game_copy.bonuses:
-            bonus.rect = deepcopy(bonus.rect)
         return game_copy
 
     def get_successors(self):
@@ -244,18 +262,23 @@ class Game:
         successors_list = []
         for action in ACTION_LIST:
             successor = self.deep_copy_game()
+            successor.players[0].moving_left = False
+            successor.players[0].moving_right = False
             if action == MOVE_LEFT:
                 successor.players[0].moving_left = True
-                successor.update()
+                for i in range(LOOP_AT_EACH_SUCCESSOR_UPDATES):
+                    successor.update()
                 successor.players[0].moving_left = False
             elif action == MOVE_RIGHT:
                 successor.players[0].moving_right = True
-                successor.update()
+                for i in range(LOOP_AT_EACH_SUCCESSOR_UPDATES):
+                    successor.update()
                 successor.players[0].moving_right = False
             elif action == SHOOT and not successor.players[0].weapon.is_active:
                 successor.players[0].shoot()
-                successor.update()
+                for i in range(LOOP_AT_EACH_SUCCESSOR_UPDATES):
+                    successor.update()
 
-            successors_list.append(successor)
+            successors_list.append([successor, action])
 
         return successors_list
