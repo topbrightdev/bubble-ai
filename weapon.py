@@ -1,5 +1,6 @@
 import pygame
 from settings import *
+from copy import copy, deepcopy
 
 
 class Weapon(pygame.sprite.Sprite):
@@ -16,3 +17,8 @@ class Weapon(pygame.sprite.Sprite):
                 self.is_active = False
             else:
                 self.rect = self.rect.move(0, -WEAPON_SPEED)
+
+    def deep_copy_weapon(self):
+        copy_weapon = Weapon(self.rect.centerx, self.rect.top)
+        copy_weapon.is_active = self.is_active
+        return copy_weapon

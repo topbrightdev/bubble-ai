@@ -17,3 +17,6 @@ class Bonus(pygame.sprite.Sprite):
     def update(self):
         if self.rect.bottom < WINDOWHEIGHT:
             self.rect = self.rect.move(0, BONUS_SPEED)
+
+    def deep_copy_bonus(self):
+        return Bonus(self.rect.centerx, self.rect.centery, self.type)
