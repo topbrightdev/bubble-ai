@@ -268,16 +268,28 @@ class Game:
                 successor.players[0].moving_left = True
                 for i in range(LOOP_AT_EACH_SUCCESSOR_UPDATES):
                     successor.update()
+                    if self.dead_player:
+                        break
                 successor.players[0].moving_left = False
+                if self.dead_player:
+                    continue
             elif action == MOVE_RIGHT:
                 successor.players[0].moving_right = True
                 for i in range(LOOP_AT_EACH_SUCCESSOR_UPDATES):
                     successor.update()
+                    if self.dead_player:
+                        break
                 successor.players[0].moving_right = False
+                if self.dead_player:
+                    continue
             elif action == SHOOT and not successor.players[0].weapon.is_active:
                 successor.players[0].shoot()
                 for i in range(LOOP_AT_EACH_SUCCESSOR_UPDATES):
                     successor.update()
+                    if self.dead_player:
+                        break
+                if self.dead_player:
+                    continue
 
             successors_list.append([successor, action])
 
