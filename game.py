@@ -20,6 +20,8 @@ class Game:
 
     def __init__(self, level=1):
         self.score = 0
+        self.g_score = 0
+        self.f_score = 0
         self.balls = []
         self.hexagons = []
         self.players = [Player()]
@@ -46,15 +48,27 @@ class Game:
     def __lt__(self, other):
         # TODO implement better
         if bool(random.getrandbits(1)):
-            return self.get_score() < other.get_score()
+            return self.get_f_score() < other.get_f_score()
         else:
-            return self.get_score() <= other.get_score()
+            return self.get_f_score() <= other.get_f_score()
 
     def add_to_score(self, to_add):
         self.score += to_add
 
     def get_score(self):
         return self.score
+
+    def update_g_function(self, value):
+        self.g_score = value
+
+    def get_g_score(self):
+        return self.g_score
+
+    def update_f_function(self, value):
+        self.f_score = value
+
+    def get_f_score(self):
+        return self.f_score
 
     def load_level(self, level):
         self.is_restarted = True
