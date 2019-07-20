@@ -1,6 +1,6 @@
 import heapq
 
-def a_star(start, goal):
+def a_star(start, goal, heuristic):
     visited_set = set()
     fringe_set = [start]
     cameFrom = {}
@@ -8,33 +8,34 @@ def a_star(start, goal):
     path_size = 0
     starting_score = start.get_score()
     start.update_g_function(0)
-    start.update_f_function(is_goal_heuristic(start, starting_score, path_size))
+    start.update_f_function(heuristic(start, starting_score, path_size))
 
     while len(fringe_set):
         current = heapq.heappop(fringe_set)
         path, path_size = reconstruct_path(cameFrom, current)
-        if is_goal(current, starting_score, path_size):
+        if len(visited_set) == 500 or path_size >= 10:
             return path, path_size
-        elif current.dead_player:
-            continue
-        elif path_size >= 5:
-            # TODO change
-            continue
+        # elif path_size >= 5:
+        #     # TODO change
+        #     continue
         visited_set.add(current)
 
         list_of_childs = current.get_successors()
 
         for child in list_of_childs:
             child_node, child_action = child
-            if child_node in visited_set:
+            if child_node.dead_player:
+                continue
+            elif child_node in visited_set:
                 continue # Ignore the childs which is already evaluated
-            tentative_g = child_node.get_score()
+            tentative_g = 0 #TODO change
 
             if child_node not in fringe_set:
                 fringe_set.append(child_node)
                 # TODO we need to check if we get the same state from two or more other ways?
-            elif tentative_g <= child_node.get_g_score: # if we already discovered in this node
-                continue
+            # TODO return this lines when g score mean something
+            # elif tentative_g <= child_node.get_g_score(): # if we already discovered in this node
+            #     continue
 
             # This path is the best until now
             cameFrom[child_node] = [current, child_action]
@@ -42,7 +43,7 @@ def a_star(start, goal):
 
             # TODO notice that we take negative value, and use min heap
             child_node.update_g_function(-tentative_g)
-            child_node.update_f_function(child_node.get_g_score() + is_goal_heuristic(child_node, starting_score, child_path_size))
+            child_node.update_f_function(child_node.get_g_score() + heuristic(child_node, starting_score, child_path_size))
 
     # TODO we are here if every path is more then 5, and then take the last (random) path we checked
     return path, path_size

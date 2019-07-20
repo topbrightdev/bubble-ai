@@ -1,5 +1,6 @@
 from a_star import *
 from game import *
+from heuristics import *
 
 ai_spot_counter = 0
 ai_path_size = 0
@@ -11,8 +12,11 @@ def handle_ai_game_event(game):
     global ai_spot_counter, ai_path_size, ai_path
     # if we finish the current path, construct a new one
     if (ai_spot_counter // LOOP_AT_EACH_SUCCESSOR_UPDATES >= ai_path_size):
-        ai_path, ai_path_size = a_star(game, None)  # TODO check what is goal, here
+        ai_path, ai_path_size = a_star(game, goal=None, heuristic=blow_up_balls_and_dont_die) # TODO check what is goal, here
         ai_spot_counter = 0
+    if len(ai_path) == 0:
+        print("ai path len is 0")
+        return
 
     real_spot_at_path = ai_spot_counter // LOOP_AT_EACH_SUCCESSOR_UPDATES
     cur_action = ai_path[real_spot_at_path]

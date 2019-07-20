@@ -13,7 +13,7 @@ MOVE_LEFT = 'left'
 MOVE_RIGHT = 'right'
 SHOOT = 'shoot'
 ACTION_LIST = [MOVE_LEFT, MOVE_RIGHT, SHOOT]
-LOOP_AT_EACH_SUCCESSOR_UPDATES = 4
+LOOP_AT_EACH_SUCCESSOR_UPDATES = 2
 
 
 class Game:
@@ -223,6 +223,8 @@ class Game:
             if self.level == self.max_level:
                 self.is_completed = True
 
+        return self
+
     def _timer(self, interval, worker_func, iterations=0):
         if iterations and not self.dead_player and not \
                 self.level_completed and not self.is_restarted:
@@ -244,7 +246,7 @@ class Game:
         return self.time_left
 
     def deep_copy_game(self): # TODO check if ok
-        game_copy = copy(self)
+        game_copy = Game(level=self.level)
 
         # TODO check if deep working
         game_copy.balls = []
@@ -261,13 +263,24 @@ class Game:
         #TODO
         game_copy.bonuses = []
         for bonus in self.bonuses:
-            game_copy.players.append(bonus.deep_copy_bonus())
+            game_copy.bonuses.append(bonus.deep_copy_bonus())
 
-        player_copy = copy(self.players[0])
-        player_copy.rect = deepcopy(player_copy.rect)
-        # TODO check if deep needed
-        player_copy.weapon = copy(player_copy.weapon)
-        game_copy.players = [player_copy]
+        # copy fields
+        game_copy.score = self.score
+        game_copy.g_score = self.g_score
+        game_copy.f_score = self.f_score
+        game_copy.game_over = self.game_over
+        game_copy.level_completed = self.level_completed
+        game_copy.is_running = self.is_running
+        game_copy.is_completed = self.is_completed
+        game_copy.max_level = self.max_level
+        game_copy.is_multiplayer = self.is_multiplayer
+        game_copy.is_ai = self.is_ai
+        game_copy.is_restarted = self.is_restarted
+        game_copy.dead_player = self.dead_player
+        game_copy.mode = self.mode
+        game_copy.level = self.level
+        game_copy.time_left = self.time_left
 
         return game_copy
 
@@ -296,7 +309,9 @@ class Game:
                 successor.players[0].moving_right = False
                 if self.dead_player:
                     continue
-            elif action == SHOOT and not successor.players[0].weapon.is_active:
+            elif action == SHOOT:
+                if successor.players[0].weapon.is_active:
+                    continue
                 successor.players[0].shoot()
                 for i in range(LOOP_AT_EACH_SUCCESSOR_UPDATES):
                     successor.update()

@@ -30,7 +30,6 @@ class Player(pygame.sprite.Sprite):
         self.weapon.is_active = False
 
     def deep_copy_player(self):
-        # return Bubble(self.rect.centerx, self.rect.centerx, self.size, self.speed, 'ball.png')
         player_copy = Player()
         player_copy.image = self.image
         player_copy.rect = deepcopy(player_copy.rect)
