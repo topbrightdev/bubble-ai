@@ -1,9 +1,8 @@
 from pygame.locals import *
 from collections import OrderedDict
 
-from game import *
 from menu import *
-from a_star import *
+from handle_ai_event import *
 
 pygame.init()
 pygame.display.set_caption('Bubble Trouble')
@@ -12,9 +11,6 @@ screen = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 clock = pygame.time.Clock()
 font = pygame.font.SysFont('monospace', 30)
 game = Game()
-cur_spot_at_ai_path = 0
-last_path_at_ai_path = 0
-ai_path = None
 
 
 def start_level(level):
@@ -179,7 +175,7 @@ def draw_world():
 
 def handle_game_event():
     if game.is_ai:
-        handle_ai_game_event()
+        handle_ai_game_event(game)
     for event in pygame.event.get():
         if event.type == KEYDOWN:
             if event.key == K_LEFT:
@@ -210,37 +206,6 @@ def handle_game_event():
                     game.players[1].moving_right = False
         if event.type == QUIT:
             quit_game()
-
-
-def handle_ai_game_event():
-    # return handle_random_game_event()
-    global cur_spot_at_ai_path, last_path_at_ai_path, ai_path
-    real_spot_at_ai_path = cur_spot_at_ai_path // LOOP_AT_EACH_SUCCESSOR_UPDATES
-    if (real_spot_at_ai_path >= last_path_at_ai_path):
-        path, size_path = a_star(game, None) # TODO check what is goal, here
-        last_path_at_ai_path = size_path
-        cur_spot_at_ai_path = 0
-        real_spot_at_ai_path = 0
-        ai_path = path
-    cur_spot_at_ai_path += 1
-    cur_play = ai_path[real_spot_at_ai_path]
-    if cur_play == MOVE_LEFT:
-        game.players[0].moving_left = True
-        game.players[0].moving_right = False
-    elif cur_play == MOVE_RIGHT:
-        game.players[0].moving_right = True
-        game.players[0].moving_left = False
-    if cur_play == SHOOT and not game.players[0].weapon.is_active:
-        game.players[0].moving_left = False
-        game.players[0].moving_right = False
-        game.players[0].shoot()
-
-
-def handle_random_game_event():
-    game.players[0].moving_left = random.getrandbits(1)
-    game.players[0].moving_right = random.getrandbits(1)
-    if random.getrandbits(1) and not game.players[0].weapon.is_active:
-        game.players[0].shoot()
 
 
 def handle_menu_event(menu):
