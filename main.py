@@ -8,7 +8,7 @@ def start_player_game():
 
 ## NN
 def start_nn_game():
-    level = 6
+    level = 4
     game, font, clock, screen, main_menu, load_level_menu = init_gui()
     return start_nn_level(level, game, font, clock, screen, main_menu, load_level_menu)
 

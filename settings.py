@@ -15,7 +15,7 @@ BLUE = (0, 0, 200)
 BLACK = (0, 0, 0)
 GRAVITY = 1
 STARTING_LIVES = 3
-MAX_LEVEL = 6
+MAX_LEVEL = 7
 APP_PATH = os.path.dirname(__file__) + '/'
 IMAGES_PATH = APP_PATH + 'images/'
 

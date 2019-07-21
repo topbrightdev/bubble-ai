@@ -67,7 +67,7 @@ if __name__ == "__main__":
     action_size = 3 # TODO
     agent = DQNAgent(state_size, action_size)
     agent.load("./save/bubble_nn-dqn.h5")
-    batch_size = 320 # TODO
+    batch_size = 32 # TODO
 
     for e in range(EPISODES):
         done = False
@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
         while game.is_running:
             game.update()
-            # draw_world(game, font, clock, screen, main_menu, load_level_menu)
+            draw_world(game, font, clock, screen, main_menu, load_level_menu)
 
             state = game.get_represented_state()
             state = np.reshape(state, [1, state_size])
@@ -99,7 +99,7 @@ if __name__ == "__main__":
                 done = True
                 reward = -500
 
-            # pygame.display.update()
+            pygame.display.update()
 
             agent.remember(state, action, reward, next_state, done)
             state = next_state
@@ -110,5 +110,5 @@ if __name__ == "__main__":
                 break
             if len(agent.memory) > batch_size:
                 agent.replay(batch_size)
-        if e % 10 == 0:
+        if e % 10 == 0 and e != 0:
             agent.save("./save/bubble_nn-dqn.h5")
