@@ -4,23 +4,39 @@ from collections import OrderedDict
 from menu import *
 from handle_ai_event import *
 
-pygame.init()
-pygame.display.set_caption('Bubble Trouble')
-pygame.mouse.set_visible(True)
-screen = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
-clock = pygame.time.Clock()
-font = pygame.font.SysFont('monospace', 30)
-game = Game()
+def init_gui():
+    pygame.init()
+    pygame.display.set_caption('Bubble Trouble')
+    pygame.mouse.set_visible(True)
+    screen = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+    clock = pygame.time.Clock()
+    font = pygame.font.SysFont('monospace', 30)
+    game = Game()
+
+    main_menu = Menu(
+        screen, OrderedDict(
+            [('Single Player', start_single_player_level_menu),
+                ('Two Players', start_multiplayer_level_menu),
+                ('AI Player', start_ai_player_level_menu),
+                ('Quit', quit_game)]
+        )
+    )
+    levels_available = [(str(lvl), (start_level, lvl))
+                        for lvl in range(1, game.max_level_available + 1)]
+    levels_available.append(('Back', back))
+    load_level_menu = Menu(screen, OrderedDict(levels_available))
+
+    return game, font, clock, screen, main_menu, load_level_menu
 
 
-def start_level(level):
+def start_level(level, game, font, clock, screen, main_menu, load_level_menu):
     game.load_level(level)
     main_menu.is_active = False
     pygame.mouse.set_visible(False)
     while game.is_running:
         game.update()
-        draw_world()
-        handle_game_event()
+        draw_world(game, font, clock, screen, main_menu, load_level_menu)
+        handle_game_event(game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
         if game.is_completed or game.game_over or \
                 game.level_completed or game.is_restarted:
@@ -33,38 +49,38 @@ def start_level(level):
         clock.tick(FPS)
 
 
-def start_main_menu():
+def start_main_menu(game, font, clock, screen, main_menu, load_level_menu):
     main_menu.is_active = True
     while main_menu.is_active:
         main_menu.draw()
-        handle_menu_event(main_menu)
+        handle_menu_event(main_menu, game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
         clock.tick(FPS)
 
 
-def start_load_level_menu():
+def start_load_level_menu(game, font, clock, screen, main_menu, load_level_menu):
     load_level_menu.is_active = True
     while load_level_menu.is_active:
         load_level_menu.draw()
-        handle_menu_event(load_level_menu)
+        handle_menu_event(load_level_menu, game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
         clock.tick(FPS)
 
 
-def start_single_player_level_menu():
+def start_single_player_level_menu(game, font, clock, screen, main_menu, load_level_menu):
     game.is_multiplayer = False
-    start_load_level_menu()
+    start_load_level_menu(game, font, clock, screen, main_menu, load_level_menu)
 
 
-def start_ai_player_level_menu():
+def start_ai_player_level_menu(game, font, clock, screen, main_menu, load_level_menu):
     game.is_multiplayer = False
     game.is_ai = True
-    start_load_level_menu()
+    start_load_level_menu(game, font, clock, screen, main_menu, load_level_menu)
 
 
-def start_multiplayer_level_menu():
+def start_multiplayer_level_menu(game, font, clock, screen, main_menu, load_level_menu):
     game.is_multiplayer = True
-    start_load_level_menu()
+    start_load_level_menu(game, font, clock, screen, main_menu, load_level_menu)
 
 
 def quit_game():
@@ -72,44 +88,31 @@ def quit_game():
     sys.exit()
 
 
-def back():
+def back(game, font, clock, screen, main_menu, load_level_menu):
     load_level_menu.is_active = False
 
-main_menu = Menu(
-    screen, OrderedDict(
-        [('Single Player', start_single_player_level_menu),
-            ('Two Players', start_multiplayer_level_menu),
-            ('AI Player', start_ai_player_level_menu),
-            ('Quit', quit_game)]
-    )
-)
-levels_available = [(str(lvl), (start_level, lvl))
-                    for lvl in range(1, game.max_level_available + 1)]
-levels_available.append(('Back', back))
-load_level_menu = Menu(screen, OrderedDict(levels_available))
 
-
-def draw_ball(ball):
+def draw_ball(ball, game, font, clock, screen, main_menu, load_level_menu):
     screen.blit(ball.image, ball.rect)
 
 
-def draw_hex(hexagon):
+def draw_hex(hexagon, game, font, clock, screen, main_menu, load_level_menu):
     screen.blit(hexagon.image, hexagon.rect)
 
 
-def draw_player(player):
+def draw_player(player, game, font, clock, screen, main_menu, load_level_menu):
     screen.blit(player.image, player.rect)
 
 
-def draw_weapon(weapon):
+def draw_weapon(weapon, game, font, clock, screen, main_menu, load_level_menu):
     screen.blit(weapon.image, weapon.rect)
 
 
-def draw_bonus(bonus):
+def draw_bonus(bonus, game, font, clock, screen, main_menu, load_level_menu):
     screen.blit(bonus.image, bonus.rect)
 
 
-def draw_message(message, colour):
+def draw_message(message, colour, game, font, clock, screen, main_menu, load_level_menu):
     label = font.render(message, 1, colour)
     rect = label.get_rect()
     rect.centerx = screen.get_rect().centerx
@@ -117,21 +120,21 @@ def draw_message(message, colour):
     screen.blit(label, rect)
 
 
-def draw_timer():
+def draw_timer(game, font, clock, screen, main_menu, load_level_menu):
     timer = font.render(str(game.time_left), 1, RED)
     rect = timer.get_rect()
     rect.bottomleft = 10, WINDOWHEIGHT - 10
     screen.blit(timer, rect)
 
 
-def draw_score():
+def draw_score(game, font, clock, screen, main_menu, load_level_menu):
     score = font.render("score: " + str(game.get_score()), 1, BLUE)
     rect = score.get_rect()
     rect.topright = WINDOWWIDTH - 10, 10
     screen.blit(score, rect)
 
 
-def draw_players_lives(player, is_main_player=True):
+def draw_players_lives(player, game, font, clock, screen, main_menu, load_level_menu, is_main_player=True):
     player_image = pygame.transform.scale(player.image, (20, 20))
     rect = player_image.get_rect()
     for life_num in range(player.lives):
@@ -144,36 +147,36 @@ def draw_players_lives(player, is_main_player=True):
             )
 
 
-def draw_world():
+def draw_world(game, font, clock, screen, main_menu, load_level_menu):
     screen.fill(WHITE)
     for hexagon in game.hexagons:
-        draw_hex(hexagon)
+        draw_hex(hexagon, game, font, clock, screen, main_menu, load_level_menu)
     for ball in game.balls:
-        draw_ball(ball)
+        draw_ball(ball, game, font, clock, screen, main_menu, load_level_menu)
     for player_index, player in enumerate(game.players):
         if player.weapon.is_active:
-            draw_weapon(player.weapon)
-        draw_player(player)
-        draw_players_lives(player, player_index)
+            draw_weapon(player.weapon, game, font, clock, screen, main_menu, load_level_menu)
+        draw_player(player, game, font, clock, screen, main_menu, load_level_menu)
+        draw_players_lives(player, game, font, clock, screen, main_menu, load_level_menu, player_index)
     for bonus in game.bonuses:
-        draw_bonus(bonus)
-    draw_timer()
-    draw_score()
+        draw_bonus(bonus, game, font, clock, screen, main_menu, load_level_menu)
+    draw_timer(game, font, clock, screen, main_menu, load_level_menu)
+    draw_score(game, font, clock, screen, main_menu, load_level_menu)
     if game.game_over:
-        draw_message('Game over!', RED)
-        start_main_menu()
+        draw_message('Game over!', RED, game, font, clock, screen, main_menu, load_level_menu)
+        start_main_menu(game, font, clock, screen, main_menu, load_level_menu)
     if game.is_completed:
-        draw_message('Congratulations! You win!!!', PURPLE)
+        draw_message('Congratulations! You win!!!', PURPLE, game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
         pygame.time.delay(3000)
-        start_main_menu()
+        start_main_menu(game, font, clock, screen, main_menu, load_level_menu)
     if game.level_completed and not game.is_completed:
-        draw_message('Well done! Level completed!', BLUE)
+        draw_message('Well done! Level completed!', BLUE, game, font, clock, screen, main_menu, load_level_menu)
     if game.is_restarted:
-        draw_message('Get ready!', BLUE)
+        draw_message('Get ready!', BLUE, game, font, clock, screen, main_menu, load_level_menu)
 
 
-def handle_game_event():
+def handle_game_event(game, font, clock, screen, main_menu, load_level_menu):
     if game.is_ai:
         handle_ai_game_event(game)
     for event in pygame.event.get():
@@ -208,7 +211,7 @@ def handle_game_event():
             quit_game()
 
 
-def handle_menu_event(menu):
+def handle_menu_event(menu, game, font, clock, screen, main_menu, load_level_menu):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             quit_game()
@@ -218,7 +221,7 @@ def handle_menu_event(menu):
                 if menu == main_menu:
                     quit_game()
                 else:
-                    start_main_menu()
+                    start_main_menu(game, font, clock, screen, main_menu, load_level_menu)
             if (event.key == pygame.K_UP or event.key == pygame.K_DOWN)\
                     and menu.current_option is None:
                 menu.current_option = 0
@@ -245,9 +248,9 @@ def handle_menu_event(menu):
             for option in menu.options:
                 if option.is_selected:
                     if not isinstance(option.function, tuple):
-                        option.function()
+                        option.function(game, font, clock, screen, main_menu, load_level_menu)
                     else:
-                        option.function[0](option.function[1])
+                        option.function[0](option.function[1], game, font, clock, screen, main_menu, load_level_menu)
 
         if pygame.mouse.get_rel() != (0, 0):
             pygame.mouse.set_visible(True)
