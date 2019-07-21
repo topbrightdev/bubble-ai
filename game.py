@@ -278,42 +278,68 @@ class Game:
 
         return game_copy
 
+    def play_step(self, action):
+        self.players[0].moving_left = False
+        self.players[0].moving_right = False
+        if action == MOVE_LEFT:
+            self.players[0].moving_left = True
+            for i in range(LOOP_AT_EACH_MOVE_UPDATE):
+                self.update()
+                if self.dead_player:
+                    break
+            self.players[0].moving_left = False
+            if self.dead_player:
+                return
+        elif action == MOVE_RIGHT:
+            self.players[0].moving_right = True
+            for i in range(LOOP_AT_EACH_MOVE_UPDATE):
+                self.update()
+                if self.dead_player:
+                    break
+            self.players[0].moving_right = False
+            if self.dead_player:
+                return
+        elif action == SHOOT:
+            if not self.players[0].weapon.is_active:
+                self.players[0].shoot()
+            for i in range(LOOP_AT_EACH_MOVE_UPDATE):
+                self.update()
+                if self.dead_player:
+                    break
+            if self.dead_player:
+                return
+
     def get_successors(self):
         # TODO maybe update X times faster (by increase speed, at astar)
         successors_list = []
         for action in ACTION_LIST:
             successor = self.deep_copy_game()
-            successor.players[0].moving_left = False
-            successor.players[0].moving_right = False
-            if action == MOVE_LEFT:
-                successor.players[0].moving_left = True
-                for i in range(LOOP_AT_EACH_MOVE_UPDATE):
-                    successor.update()
-                    if self.dead_player:
-                        break
-                successor.players[0].moving_left = False
-                if self.dead_player:
-                    continue
-            elif action == MOVE_RIGHT:
-                successor.players[0].moving_right = True
-                for i in range(LOOP_AT_EACH_MOVE_UPDATE):
-                    successor.update()
-                    if self.dead_player:
-                        break
-                successor.players[0].moving_right = False
-                if self.dead_player:
-                    continue
-            elif action == SHOOT:
-                if successor.players[0].weapon.is_active:
-                    continue
-                successor.players[0].shoot()
-                for i in range(LOOP_AT_EACH_MOVE_UPDATE):
-                    successor.update()
-                    if self.dead_player:
-                        break
-                if self.dead_player:
-                    continue
-
+            successor.play_step(action)
             successors_list.append([successor, action])
 
         return successors_list
+
+    def get_represented_state(self):
+        # (ball1x, ball1y, ball1size, ball1dir, ball2x, ball2y, ball2size, ball2dir, ..., p1x, isshot)
+        cur_state = []
+        for i in range(BALLS_AT_STATE):
+            if i < len(self.balls):
+                if self.balls[i].speed[0] > 0:
+                    ball_dir = 1
+                else:
+                    ball_dir = -1
+                cur_state.append(self.balls[i].rect.centerx)
+                cur_state.append(self.balls[i].rect.centery)
+                cur_state.append(self.balls[i].size)
+                cur_state.append(ball_dir)
+            else:
+                cur_state += [0, 0, 0, 0]
+
+        if self.players[AI_PLAYER_NUM].weapon.is_active:
+            weapon_active = 1
+        else:
+            weapon_active = -1
+        cur_state.append(self.players[AI_PLAYER_NUM].rect.centerx)
+        cur_state.append(weapon_active)
+
+        return cur_state
