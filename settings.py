@@ -1,5 +1,6 @@
 import os
 
+## General fields
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 480
 FPS = 30
@@ -17,3 +18,15 @@ STARTING_LIVES = 3
 MAX_LEVEL = 6
 APP_PATH = os.path.dirname(__file__) + '/'
 IMAGES_PATH = APP_PATH + 'images/'
+
+## AI fields
+AI_PLAYER_NUM = 0
+MOVE_LEFT = 'left'
+MOVE_RIGHT = 'right'
+SHOOT = 'shoot'
+ACTION_LIST = [MOVE_LEFT, MOVE_RIGHT, SHOOT]
+
+# AI - astar fields
+LOOP_AT_EACH_MOVE_UPDATE = 2
+MAX_VISITED_LEN = 500
+MAX_PATH_SIZE = 10

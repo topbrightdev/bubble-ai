@@ -7,13 +7,7 @@ import copy
 from bubbles import *
 from player import *
 from bonuses import *
-
-
-MOVE_LEFT = 'left'
-MOVE_RIGHT = 'right'
-SHOOT = 'shoot'
-ACTION_LIST = [MOVE_LEFT, MOVE_RIGHT, SHOOT]
-LOOP_AT_EACH_SUCCESSOR_UPDATES = 2
+from settings import *
 
 
 class Game:
@@ -293,7 +287,7 @@ class Game:
             successor.players[0].moving_right = False
             if action == MOVE_LEFT:
                 successor.players[0].moving_left = True
-                for i in range(LOOP_AT_EACH_SUCCESSOR_UPDATES):
+                for i in range(LOOP_AT_EACH_MOVE_UPDATE):
                     successor.update()
                     if self.dead_player:
                         break
@@ -302,7 +296,7 @@ class Game:
                     continue
             elif action == MOVE_RIGHT:
                 successor.players[0].moving_right = True
-                for i in range(LOOP_AT_EACH_SUCCESSOR_UPDATES):
+                for i in range(LOOP_AT_EACH_MOVE_UPDATE):
                     successor.update()
                     if self.dead_player:
                         break
@@ -313,7 +307,7 @@ class Game:
                 if successor.players[0].weapon.is_active:
                     continue
                 successor.players[0].shoot()
-                for i in range(LOOP_AT_EACH_SUCCESSOR_UPDATES):
+                for i in range(LOOP_AT_EACH_MOVE_UPDATE):
                     successor.update()
                     if self.dead_player:
                         break

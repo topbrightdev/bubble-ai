@@ -1,4 +1,5 @@
 import heapq
+from settings import *
 
 def a_star(start, goal, heuristic):
     visited_set = set()
@@ -13,7 +14,7 @@ def a_star(start, goal, heuristic):
     while len(fringe_set):
         current = heapq.heappop(fringe_set)
         path, path_size = reconstruct_path(cameFrom, current)
-        if len(visited_set) == 500 or path_size >= 10:
+        if len(visited_set) == MAX_VISITED_LEN or path_size >= MAX_PATH_SIZE:
             return path, path_size
         # elif path_size >= 5:
         #     # TODO change
