@@ -36,7 +36,24 @@ def stay_in_center_heuristic(game, starting_score, path_size):
     x_center = WINDOWWIDTH // 2
     return abs(game.players[0].rect.centerx - x_center)
 
-def blow_up_balls_and_dont_die(game, starting_score, path_size):
-    return blow_up_ball_heuristic(game, starting_score, path_size) * 1 +\
+# def shoot_heuristic(game, starting_score, path_size):
+
+def pick_up_bonuses_heuristic(game, starting_score, path_size):
+    if len(game.bonuses) == 0:
+        return 0
+    distance_from_closest_bonus = WINDOWWIDTH + 1
+    for bonus in game.bonuses:
+        if distance_between_ball_and_player(bonus, game) < distance_from_closest_bonus:
+            distance_from_closest_bonus = distance_between_ball_and_player(bonus, game)
+    return distance_from_closest_bonus * 100
+
+
+def distance_between_bonus_and_player(bonus, game, index = 0):
+    distance = abs(bonus.rect.centerx - game.players[index].rect.centerx)
+    return distance
+
+
+def main_heuristic(game, starting_score, path_size):
+    return blow_up_ball_heuristic(game, starting_score, path_size) * 2 +\
            dont_die_heuristic(game, starting_score, path_size) * 6 +\
            stay_in_center_heuristic(game, starting_score, path_size) * 3

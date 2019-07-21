@@ -148,7 +148,9 @@ def draw_players_lives(player, game, font, clock, screen, main_menu, load_level_
 
 
 def draw_world(game, font, clock, screen, main_menu, load_level_menu):
-    screen.fill(WHITE)
+    #screen.fill(WHITE)
+    image = pygame.image.load(IMAGES_PATH + 'background_level.png')
+    screen.blit(image,(0,0))
     for hexagon in game.hexagons:
         draw_hex(hexagon, game, font, clock, screen, main_menu, load_level_menu)
     for ball in game.balls:

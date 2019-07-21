@@ -38,12 +38,13 @@ class MenuOption (pygame.font.Font):
 
 
 class Menu():
-    def __init__(self, screen, functions, bg_color=BLACK):
+    def __init__(self, screen, functions, bg_color=BLACK, image_name='1_bubble_trouble.png'):
         self.is_active = True
         self.screen = screen
         self.scr_width = self.screen.get_rect().width
         self.scr_height = self.screen.get_rect().height
-        self.bg_color = bg_color
+        # self.bg_color = bg_color
+        self.image = pygame.image.load(IMAGES_PATH + image_name)
         self.options = []
         self.current_option = None
         self.functions = functions
@@ -61,7 +62,8 @@ class Menu():
             self.options.append(menu_option)
 
     def draw(self):
-        self.screen.fill(self.bg_color)
+        #self.screen.fill(self.image)
+        self.screen.blit(self.image,(0,0))
         for option in self.options:
             option.check_for_mouse_selection(pygame.mouse.get_pos())
             if self.current_option is not None:
