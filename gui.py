@@ -83,7 +83,7 @@ def start_multiplayer_level_menu(game, font, clock, screen, main_menu, load_leve
     start_load_level_menu(game, font, clock, screen, main_menu, load_level_menu)
 
 
-def quit_game():
+def quit_game(game, font, clock, screen, main_menu, load_level_menu):
     pygame.quit()
     sys.exit()
 
@@ -190,7 +190,7 @@ def handle_game_event(game, font, clock, screen, main_menu, load_level_menu):
             elif event.key == K_SPACE and not game.players[0].weapon.is_active:
                 game.players[0].shoot()
             elif event.key == K_ESCAPE:
-                quit_game()
+                quit_game(game, font, clock, screen, main_menu, load_level_menu)
             if game.is_multiplayer:
                 if event.key == K_a:
                     game.players[1].moving_left = True
@@ -210,18 +210,18 @@ def handle_game_event(game, font, clock, screen, main_menu, load_level_menu):
                 elif event.key == K_d:
                     game.players[1].moving_right = False
         if event.type == QUIT:
-            quit_game()
+            quit_game(game, font, clock, screen, main_menu, load_level_menu)
 
 
 def handle_menu_event(menu, game, font, clock, screen, main_menu, load_level_menu):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            quit_game()
+            quit_game(game, font, clock, screen, main_menu, load_level_menu)
 
         elif event.type == KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 if menu == main_menu:
-                    quit_game()
+                    quit_game(game, font, clock, screen, main_menu, load_level_menu)
                 else:
                     start_main_menu(game, font, clock, screen, main_menu, load_level_menu)
             if (event.key == pygame.K_UP or event.key == pygame.K_DOWN)\
