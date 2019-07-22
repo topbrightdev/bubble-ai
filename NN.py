@@ -100,8 +100,10 @@ if __name__ == "__main__":
             next_state = game.get_represented_state()
             next_state = np.reshape(next_state, [1, state_size])
             reward = game.get_score() - cur_game_score
-            if game.is_completed or game.game_over or \
-                    game.level_completed or game.dead_player:
+            if game.is_completed or game.level_completed:
+                done = True
+                reward = 500
+            elif game.game_over or game.dead_player:
                 done = True
                 reward = -500
 
