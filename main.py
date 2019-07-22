@@ -7,11 +7,17 @@ def start_player_game():
 
 
 ## NN
-def start_nn_game():
-    level = 4
+def start_nn_game(level):
     game, font, clock, screen, main_menu, load_level_menu = init_gui()
     return start_nn_level(level, game, font, clock, screen, main_menu, load_level_menu)
 
+def start_nn_game_without_gui(level):
+    pygame.init()
+    game = Game()
+    game.is_ai = True
+    game.is_nn = True
+    game.load_level(level)
+    return game
 
 def start_nn_level(level, game, font, clock, screen, main_menu, load_level_menu):
     game.is_ai = True

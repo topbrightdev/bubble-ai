@@ -9,6 +9,7 @@ from keras.optimizers import Adam
 from main import *
 
 EPISODES = 1000
+SHOW_NN_GUI = False
 
 
 class DQNAgent:
@@ -66,16 +67,21 @@ if __name__ == "__main__":
     state_size = STATE_LEN # TODO
     action_size = 3 # TODO
     agent = DQNAgent(state_size, action_size)
-    agent.load("./save/bubble_nn-dqn.h5")
+    agent.load("./save/bubble_nn-dqn60.h5")
     batch_size = 32 # TODO
 
     for e in range(EPISODES):
         done = False
-        game, font, clock, screen, main_menu, load_level_menu = start_nn_game()
+        level = random.randint(1,7)
+        if SHOW_NN_GUI:
+            game, font, clock, screen, main_menu, load_level_menu = start_nn_game(level)
+        else:
+            game = start_nn_game_without_gui(level)
 
         while game.is_running:
             game.update()
-            draw_world(game, font, clock, screen, main_menu, load_level_menu)
+            if SHOW_NN_GUI:
+                draw_world(game, font, clock, screen, main_menu, load_level_menu)
 
             state = game.get_represented_state()
             state = np.reshape(state, [1, state_size])
@@ -99,16 +105,17 @@ if __name__ == "__main__":
                 done = True
                 reward = -500
 
-            pygame.display.update()
+            if SHOW_NN_GUI:
+                pygame.display.update()
 
             agent.remember(state, action, reward, next_state, done)
             state = next_state
             if done:
                 # pygame.quit()
-                print("episode: {}/{}, score: {}, e: {:.2}"
-                      .format(e, EPISODES, game.get_score(), agent.epsilon))
+                print("episode: {}/{}, level: {}, score: {}, e: {:.2}"
+                      .format(e, EPISODES, level, game.get_score(), agent.epsilon))
                 break
             if len(agent.memory) > batch_size:
                 agent.replay(batch_size)
-        if e % 10 == 0 and e != 0:
-            agent.save("./save/bubble_nn-dqn.h5")
+        if e % 10 == 0:
+            agent.save("./save/bubble_nn-dqn_e_"+str(e)+"_score"+str(game.get_score())+"_.h5")
