@@ -1,9 +1,11 @@
+import operator
 import sys
 from threading import Timer
 import random
 import json
 import copy
 
+import heuristics
 from bubbles import *
 from player import *
 from bonuses import *
@@ -322,15 +324,17 @@ class Game:
     def get_represented_state(self):
         # (ball1x, ball1y, ball1size, ball1dir, ball2x, ball2y, ball2size, ball2dir, ..., p1x, isshot)
         cur_state = []
+        closest_x_balls = self.get_closest_x_balls(BALLS_AT_STATE)
         for i in range(BALLS_AT_STATE):
-            if i < len(self.balls):
-                if self.balls[i].speed[0] > 0:
+            if i < len(closest_x_balls):
+                cur_ball = closest_x_balls[i]
+                if cur_ball.speed[0] > 0:
                     ball_dir = 1
                 else:
                     ball_dir = -1
-                cur_state.append(self.balls[i].rect.centerx)
-                cur_state.append(self.balls[i].rect.centery)
-                cur_state.append(self.balls[i].size)
+                cur_state.append(cur_ball.rect.centerx)
+                cur_state.append(cur_ball.rect.centery)
+                cur_state.append(cur_ball.size)
                 cur_state.append(ball_dir)
             else:
                 cur_state += [0, 0, 0, 0]
@@ -343,3 +347,17 @@ class Game:
         cur_state.append(weapon_active)
 
         return cur_state
+
+    def get_closest_x_balls(self, x):
+        closest_x_balls = []
+        all_balls_list = []
+        for ball in self.balls:
+            all_balls_list.append((ball, heuristics.distance_between_ball_and_player(ball, self))) # TODO move here
+        for ball in self.hexagons:
+            all_balls_list.append((ball, heuristics.distance_between_ball_and_player(ball, self))) # TODO move here
+
+        sorted_balls = sorted(all_balls_list, key=operator.itemgetter(1))
+        for i in range(min(x, len(sorted_balls))):
+            closest_x_balls.append(sorted_balls[i][0])
+
+        return closest_x_balls

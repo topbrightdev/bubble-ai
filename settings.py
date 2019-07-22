@@ -16,8 +16,8 @@ BLACK = (0, 0, 0)
 GRAVITY = 1
 STARTING_LIVES = 3
 MAX_LEVEL = 7
-APP_PATH = os.path.dirname(__file__) + '/'
-IMAGES_PATH = APP_PATH + 'images/'
+APP_PATH = os.path.dirname(__file__) + '/content' # TODO delete content
+IMAGES_PATH = APP_PATH # TODO add images/
 
 ## AI fields
 AI_PLAYER_NUM = 0
@@ -32,6 +32,6 @@ MAX_VISITED_LEN = 300
 MAX_PATH_SIZE = 8
 
 # NN fields
-BALLS_AT_STATE = 2
+BALLS_AT_STATE = 4
 EACH_BALL_REPR = 4
 STATE_LEN = (BALLS_AT_STATE*EACH_BALL_REPR) + 2

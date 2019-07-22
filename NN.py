@@ -27,8 +27,8 @@ class DQNAgent:
     def _build_model(self):
         # Neural Net for Deep-Q learning Model
         model = Sequential()
-        model.add(Dense(24, input_dim=self.state_size, activation='relu'))
-        model.add(Dense(24, activation='relu'))
+        model.add(Dense(32, input_dim=self.state_size, activation='relu'))
+        model.add(Dense(32, activation='relu'))
         model.add(Dense(self.action_size, activation='linear'))
         model.compile(loss='mse',
                       optimizer=Adam(lr=self.learning_rate))
@@ -67,12 +67,12 @@ if __name__ == "__main__":
     state_size = STATE_LEN # TODO
     action_size = 3 # TODO
     agent = DQNAgent(state_size, action_size)
-    agent.load("./save/bubble_nn-dqn60.h5")
+    # agent.load("./save/bubble_nn-dqn60.h5")
     batch_size = 32 # TODO
 
     for e in range(EPISODES):
         done = False
-        level = random.randint(1,7)
+        level = 7
         if SHOW_NN_GUI:
             game, font, clock, screen, main_menu, load_level_menu = start_nn_game(level)
         else:
@@ -119,5 +119,5 @@ if __name__ == "__main__":
                 break
             if len(agent.memory) > batch_size:
                 agent.replay(batch_size)
-        if e % 10 == 0:
+        if e % 50 == 0:
             agent.save("./save/bubble_nn-dqn_e_"+str(e)+"_score"+str(game.get_score())+"_.h5")
