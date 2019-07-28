@@ -18,8 +18,12 @@ def dont_die_heuristic(game, starting_score, path_size):
 
 
 def find_the_distance_from_the_closest_ball(game, index = 0):
-    distance_from_closest_ball = distance_between_ball_and_player(game.balls[0], game)
-    closest_ball = game.balls[0]
+    if len(game.balls) != 0:
+        distance_from_closest_ball = distance_between_ball_and_player(game.balls[0], game)
+        closest_ball = game.balls[0]
+    else:
+        distance_from_closest_ball = distance_between_ball_and_player(game.hexagons[0], game)
+        closest_ball = game.hexagons[0]
     for i in range(1, len(game.balls)):
         cur_ball = game.balls[i]
         cur_dist = distance_between_ball_and_player(cur_ball, game)
@@ -36,17 +40,21 @@ def find_the_distance_from_the_closest_ball(game, index = 0):
 
 
 def find_the_distance_from_the_closest_ball_at_x_axis(game, index = 0):
-    distance_from_closest_ball = abs(game.players[0].rect.centerx - game.balls[0].rect.centerx)
-    closest_ball = game.balls[0]
+    if len(game.balls) != 0:
+        distance_from_closest_ball = abs(game.players[0].rect.centerx - game.balls[0].rect.centerx)
+        closest_ball = game.balls[0]
+    else:
+        distance_from_closest_ball = abs(game.players[0].rect.centerx - game.hexagons[0].rect.centerx)
+        closest_ball = game.hexagons[0]
     for i in range(1, len(game.balls)):
         cur_ball = game.balls[i]
-        cur_dist = abs(game.players[0].rect.centerx - game.balls[0].rect.centerx)
+        cur_dist = abs(game.players[0].rect.centerx - cur_ball.rect.centerx)
         if cur_dist < distance_from_closest_ball:
             distance_from_closest_ball = cur_dist
             closest_ball = cur_ball
     for i in range(len(game.hexagons)):
         cur_ball = game.hexagons[i]
-        cur_dist = abs(game.players[0].rect.centerx - game.balls[0].rect.centerx)
+        cur_dist = abs(game.players[0].rect.centerx - cur_ball.rect.centerx)
         if cur_dist < distance_from_closest_ball:
             distance_from_closest_ball = cur_dist
             closest_ball = cur_ball

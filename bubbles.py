@@ -6,6 +6,7 @@ from settings import *
 class Bubble(pygame.sprite.Sprite):
     def __init__(self, x, y, size, speed, image_name):
         pygame.sprite.Sprite.__init__(self)
+        self.image_name = image_name
         self.image = pygame.image.load(IMAGES_PATH + image_name)
         self.image = pygame.transform.scale(self.image, (size*15, size*15))
         self.rect = self.image.get_rect(centerx=x, centery=y)
@@ -27,10 +28,6 @@ class Bubble(pygame.sprite.Sprite):
     def _clip(val, min_value, max_value):
         return min(max(val, min_value), max_value)
 
-    def deep_copy_bubble(self):
-        return Bubble(self.rect.centerx, self.rect.centerx, self.size, self.speed, 'ball.png')
-
-
 
 class Ball(Bubble):
     def __init__(self, x, y, size, speed):
@@ -40,7 +37,13 @@ class Ball(Bubble):
         self.speed[1] += GRAVITY
         Bubble.update(self)
 
+    def deep_copy_bubble(self):
+        return Ball(self.rect.centerx, self.rect.centerx, self.size, self.speed)
+
 
 class Hexagon(Bubble):
     def __init__(self, x, y, size, speed):
         Bubble.__init__(self, x, y, size, speed, 'hexagon.png')
+
+    def deep_copy_bubble(self):
+        return Hexagon(self.rect.centerx, self.rect.centerx, self.size, self.speed)

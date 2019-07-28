@@ -324,31 +324,39 @@ class Game:
     def get_represented_state(self):
         # (ball1x, ball1y, ball1size, ball1dir, ball2x, ball2y, ball2size, ball2dir, ..., p1x, isshot)
         cur_state = []
-        closest_x_balls = self.get_closest_x_balls(BALLS_AT_STATE)
+        x_closest_bubbles = self.get_x_closest_bubbles(BALLS_AT_STATE)
         for i in range(BALLS_AT_STATE):
-            if i < len(closest_x_balls):
-                cur_ball = closest_x_balls[i]
-                if cur_ball.speed[0] > 0:
-                    ball_dir = 1
+            if i < len(x_closest_bubbles):
+                bubble = x_closest_bubbles[i]
+                if 'ball' in bubble.image_name:
+                    bubble_type = 1
+                elif 'hexagon' in bubble.image_name:
+                    bubble_type = -1
                 else:
-                    ball_dir = -1
-                cur_state.append(cur_ball.rect.centerx)
-                cur_state.append(cur_ball.rect.centery)
-                cur_state.append(cur_ball.size)
-                cur_state.append(ball_dir)
+                    print('invalid bubble type')
+                cur_state.append(bubble_type)
+                cur_state.append(bubble.size)
+                cur_state.append(bubble.rect.centerx)
+                cur_state.append(bubble.rect.centery)
+                cur_state.append(bubble.speed[0])
+                cur_state.append(bubble.speed[1])
             else:
-                cur_state += [0, 0, 0, 0]
+                cur_state += [0, 0, 0, 0, 0, 0]
 
         if self.players[AI_PLAYER_NUM].weapon.is_active:
             weapon_active = 1
         else:
             weapon_active = -1
+
+        num_of_bubbles = len(self.balls) + len(self.hexagons)
+
+        cur_state.append(num_of_bubbles)
         cur_state.append(self.players[AI_PLAYER_NUM].rect.centerx)
         cur_state.append(weapon_active)
 
         return cur_state
 
-    def get_closest_x_balls(self, x):
+    def get_x_closest_bubbles(self, x):
         closest_x_balls = []
         all_balls_list = []
         for ball in self.balls:

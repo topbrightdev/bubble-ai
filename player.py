@@ -9,6 +9,7 @@ class Player(pygame.sprite.Sprite):
         self.weapon = Weapon()
         self.moving_left = False
         self.moving_right = False
+        self.is_shoot = False
         self.lives = STARTING_LIVES
         self.set_position()
         self.is_alive = True

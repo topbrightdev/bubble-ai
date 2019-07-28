@@ -16,15 +16,27 @@ BLACK = (0, 0, 0)
 GRAVITY = 1
 STARTING_LIVES = 3
 MAX_LEVEL = 7
-APP_PATH = os.path.dirname(__file__) + '/content' # TODO delete content
-IMAGES_PATH = APP_PATH # TODO add images/
+
+RUN_LOCAL = True
+if RUN_LOCAL:
+    APP_PATH = os.path.dirname(__file__) + '/'
+    IMAGES_PATH = APP_PATH + 'images/'
+    SHOW_NN_GUI = True
+    PLAY_BY_MYSELF = False
+else:
+    APP_PATH = os.path.dirname(__file__) + '/content/'
+    IMAGES_PATH = APP_PATH
+    SHOW_NN_GUI = False
+    PLAY_BY_MYSELF = False
 
 ## AI fields
 AI_PLAYER_NUM = 0
 MOVE_LEFT = 'left'
 MOVE_RIGHT = 'right'
+STAY = 'stay'
 SHOOT = 'shoot'
-ACTION_LIST = [MOVE_LEFT, MOVE_RIGHT, SHOOT]
+ACTION_LIST = [MOVE_LEFT, MOVE_RIGHT, SHOOT, STAY]
+ACTIONS_LEN = len(ACTION_LIST)
 
 # AI - astar fields
 LOOP_AT_EACH_MOVE_UPDATE = 3
@@ -32,6 +44,8 @@ MAX_VISITED_LEN = 300
 MAX_PATH_SIZE = 8
 
 # NN fields
-BALLS_AT_STATE = 4
-EACH_BALL_REPR = 4
-STATE_LEN = (BALLS_AT_STATE*EACH_BALL_REPR) + 2
+BALLS_AT_STATE = 5
+EACH_BALL_REPR = 6
+GENERAL_REPR = 3
+STATE_LEN = (BALLS_AT_STATE*EACH_BALL_REPR) + GENERAL_REPR
+EPISODES = 1000
