@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
-import random
-import gym
 import numpy as np
 from collections import deque
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.optimizers import Adam
 from main import *
-
-EPISODES = 1000
-SHOW_NN_GUI = False
 
 
 class DQNAgent:
@@ -20,7 +15,7 @@ class DQNAgent:
         self.gamma = 0.95    # discount rate
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.01
-        self.epsilon_decay = 0.995
+        self.epsilon_decay = 0.9995 # TODO check if good
         self.learning_rate = 0.001
         self.model = self._build_model()
 
@@ -62,62 +57,101 @@ class DQNAgent:
     def save(self, name):
         self.model.save_weights(name)
 
+def player_action():
+    handle_game_event(game, font, clock, screen, main_menu, load_level_menu)
+    if game.players[0].moving_left:
+        return 0
+    elif game.players[0].moving_right:
+        return 1
+    elif game.players[0].is_shoot:
+        return 2
+    else:
+        return 3
 
 if __name__ == "__main__":
     state_size = STATE_LEN # TODO
-    action_size = 3 # TODO
+    action_size = ACTIONS_LEN # TODO
     agent = DQNAgent(state_size, action_size)
-    # agent.load("./save/bubble_nn-dqn60.h5")
-    batch_size = 32 # TODO
+    agent_name = "bubble_nn-dqn_after_play.h5"
+    if RUN_LOCAL:
+        agent.load("./save/" + agent_name)
+    else:
+        agent.load("./" + agent_name)
+    batch_size = 32 # TODO check if good
 
+    if PLAY_BY_MYSELF:
+        play_arr = []
     for e in range(EPISODES):
         done = False
-        level = 7
+        # level = random.randint(1, 5)
+        level = 5
         if SHOW_NN_GUI:
             game, font, clock, screen, main_menu, load_level_menu = start_nn_game(level)
         else:
             game = start_nn_game_without_gui(level)
 
+        total_game_reward = 0
         while game.is_running:
-            game.update()
-            if SHOW_NN_GUI:
-                draw_world(game, font, clock, screen, main_menu, load_level_menu)
+            cur_game_score = game.get_score()
 
             state = game.get_represented_state()
             state = np.reshape(state, [1, state_size])
-            cur_game_score = game.get_score()
-            action = agent.act(state)
+            if PLAY_BY_MYSELF:
+                action = player_action()
+            else:
+                action = agent.act(state)
             if action == 0:
                 cur_action = MOVE_LEFT
             elif action == 1:
                 cur_action = MOVE_RIGHT
             elif action == 2:
                 cur_action = SHOOT
+            elif action == 3:
+                cur_action = STAY
             else:
                 print("invalid action")
                 cur_action = 0
             play_single_action(game, cur_action, AI_PLAYER_NUM)
+
+            game.update()
+            if SHOW_NN_GUI:
+                draw_world(game, font, clock, screen, main_menu, load_level_menu)
+
             next_state = game.get_represented_state()
             next_state = np.reshape(next_state, [1, state_size])
-            reward = game.get_score() - cur_game_score
             if game.is_completed or game.level_completed:
                 done = True
-                reward = 500
+                reward = 1000
             elif game.game_over or game.dead_player:
                 done = True
-                reward = -500
-
+                reward = -100
+            else:
+                reward = (game.get_score() - cur_game_score) -0.5 #each turn cost
+            total_game_reward += reward
             if SHOW_NN_GUI:
                 pygame.display.update()
 
+            if PLAY_BY_MYSELF:
+                play_arr.append((state, action, reward, next_state, done))
             agent.remember(state, action, reward, next_state, done)
             state = next_state
             if done:
                 # pygame.quit()
-                print("episode: {}/{}, level: {}, score: {}, e: {:.2}"
-                      .format(e, EPISODES, level, game.get_score(), agent.epsilon))
+                print("episode: {}/{}, level: {}, score: {}, e: {:.2}, total_reward: {}"
+                      .format(e, EPISODES, level, game.get_score(), agent.epsilon, total_game_reward))
+                # if PLAY_BY_MYSELF:
+                    # with open("play_by_myself_level_"+str(level)+"_total_reward_"+str(total_game_reward), 'w') as f:
+                    #     for item in play_arr:
+                    #         f.write("%s\n" % item)
                 break
             if len(agent.memory) > batch_size:
                 agent.replay(batch_size)
+        if PLAY_BY_MYSELF:
+            for i in range(5):
+                for item in play_arr:
+                    state, action, reward, next_state, done = item
+                    agent.remember(state, action, reward, next_state, done)
+                    if len(agent.memory) > batch_size:
+                        agent.replay(batch_size)
         if e % 50 == 0:
-            agent.save("./save/bubble_nn-dqn_e_"+str(e)+"_score"+str(game.get_score())+"_.h5")
+            agent.save("./bubble_nn-dqn_e"+str(e)+"_level"+str(level)+"_score"+str(game.get_score())+"_.h5")
