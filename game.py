@@ -316,7 +316,7 @@ class Game:
     def get_successors(self):
         # TODO maybe update X times faster (by increase speed, at astar)
         successors_list = []
-        for action in ACTION_LIST:
+        for action in A_STAR_ACTION_LIST:
             successor = self.deep_copy_game()
             successor.play_step(action)
             successors_list.append([successor, action])

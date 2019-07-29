@@ -1,4 +1,5 @@
 import pygame
+import copy
 
 from settings import *
 
@@ -38,7 +39,8 @@ class Ball(Bubble):
         Bubble.update(self)
 
     def deep_copy_bubble(self):
-        return Ball(self.rect.centerx, self.rect.centerx, self.size, self.speed)
+        speed = copy.deepcopy(self.speed)
+        return Ball(self.rect.centerx, self.rect.centerx, self.size, speed)
 
 
 class Hexagon(Bubble):
