@@ -30,6 +30,7 @@ class Game:
         self.max_level = MAX_LEVEL # TODO change if we want to add levels
         self.is_multiplayer = False
         self.is_ai = False
+        self.is_nn = False
         self.is_restarted = False
         self.dead_player = False
         self.mode = 'Classic'
@@ -272,6 +273,7 @@ class Game:
         game_copy.max_level = self.max_level
         game_copy.is_multiplayer = self.is_multiplayer
         game_copy.is_ai = self.is_ai
+        game_copy.is_nn = self.is_nn
         game_copy.is_restarted = self.is_restarted
         game_copy.dead_player = self.dead_player
         game_copy.mode = self.mode

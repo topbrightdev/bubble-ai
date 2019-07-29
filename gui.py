@@ -179,7 +179,7 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
 
 
 def handle_game_event(game, font, clock, screen, main_menu, load_level_menu):
-    if game.is_ai:
+    if game.is_ai and not game.is_nn:
         handle_ai_game_event(game)
     for event in pygame.event.get():
         if event.type == KEYDOWN:
