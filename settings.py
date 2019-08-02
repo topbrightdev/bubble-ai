@@ -15,13 +15,13 @@ BLUE = (0, 0, 200)
 BLACK = (0, 0, 0)
 GRAVITY = 1
 STARTING_LIVES = 3
-MAX_LEVEL = 7
+MAX_LEVEL = 8
 
 RUN_LOCAL = True
 if RUN_LOCAL:
     APP_PATH = os.path.dirname(__file__) + '/'
     IMAGES_PATH = APP_PATH + 'images/'
-    SHOW_NN_GUI = True
+    SHOW_NN_GUI = False
     PLAY_BY_MYSELF = False
 else:
     APP_PATH = os.path.dirname(__file__) + '/content/'
@@ -36,7 +36,7 @@ MOVE_RIGHT = 'right'
 STAY = 'stay'
 SHOOT = 'shoot'
 A_STAR_ACTION_LIST = [MOVE_LEFT, MOVE_RIGHT, SHOOT]
-NN_ACTION_LIST = [MOVE_LEFT, MOVE_RIGHT, SHOOT, STAY]
+NN_ACTION_LIST = [MOVE_LEFT, MOVE_RIGHT, SHOOT]
 ACTIONS_LEN = len(NN_ACTION_LIST)
 
 # AI - astar fields
@@ -46,7 +46,7 @@ MAX_PATH_SIZE = 8
 
 # NN fields
 BALLS_AT_STATE = 5
-EACH_BALL_REPR = 6
+EACH_BALL_REPR = 5
 GENERAL_REPR = 3
 STATE_LEN = (BALLS_AT_STATE*EACH_BALL_REPR) + GENERAL_REPR
 EPISODES = 1000

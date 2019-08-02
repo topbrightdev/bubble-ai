@@ -12,11 +12,11 @@ class DQNAgent:
         self.state_size = state_size
         self.action_size = action_size
         self.memory = deque(maxlen=2000)
-        self.gamma = 0.95    # discount rate
+        self.gamma = 0.99    # discount rate
         self.epsilon = 1.0  # exploration rate
-        self.epsilon_min = 0.01
+        self.epsilon_min = 0.05
         self.epsilon_decay = 0.9995 # TODO check if good
-        self.learning_rate = 0.001
+        self.learning_rate = 0.002
         self.model = self._build_model()
 
     def _build_model(self):
@@ -72,19 +72,21 @@ if __name__ == "__main__":
     state_size = STATE_LEN # TODO
     action_size = ACTIONS_LEN # TODO
     agent = DQNAgent(state_size, action_size)
-    agent_name = "bubble_nn-dqn_after_play.h5"
+    agent_name = "bubble_nn-dqn.h5"
     if RUN_LOCAL:
-        agent.load("./save/" + agent_name)
+        # agent.load("./save/" + agent_name)
+        pass
     else:
-        agent.load("./" + agent_name)
+        # agent.load("./" + agent_name)
+        pass
     batch_size = 32 # TODO check if good
 
     if PLAY_BY_MYSELF:
         play_arr = []
     for e in range(EPISODES):
         done = False
-        # level = random.randint(1, 5)
-        level = 5
+        level = random.randint(1, 7)
+        # level = 5
         if SHOW_NN_GUI:
             game, font, clock, screen, main_menu, load_level_menu = start_nn_game(level)
         else:
@@ -106,8 +108,6 @@ if __name__ == "__main__":
                 cur_action = MOVE_RIGHT
             elif action == 2:
                 cur_action = SHOOT
-            elif action == 3:
-                cur_action = STAY
             else:
                 print("invalid action")
                 cur_action = 0
@@ -154,4 +154,9 @@ if __name__ == "__main__":
                     if len(agent.memory) > batch_size:
                         agent.replay(batch_size)
         if e % 50 == 0:
-            agent.save("./bubble_nn-dqn_e"+str(e)+"_level"+str(level)+"_score"+str(game.get_score())+"_.h5")
+            if RUN_LOCAL:
+                agent.save("./save/bubble_nn-dqn_e"+str(e)+"_level"+str(level)+"_score"+str(game.get_score())+"_.h5")
+                pass
+            else:
+                agent.save("./bubble_nn-dqn_e"+str(e)+"_level"+str(level)+"_score"+str(game.get_score())+"_.h5")
+                pass

@@ -326,6 +326,8 @@ class Game:
     def get_represented_state(self):
         # (ball1x, ball1y, ball1size, ball1dir, ball2x, ball2y, ball2size, ball2dir, ..., p1x, isshot)
         cur_state = []
+        cur_player_x = self.players[AI_PLAYER_NUM].rect.centerx
+        cur_player_y = self.players[AI_PLAYER_NUM].rect.centery
         x_closest_bubbles = self.get_x_closest_bubbles(BALLS_AT_STATE)
         for i in range(BALLS_AT_STATE):
             if i < len(x_closest_bubbles):
@@ -336,14 +338,17 @@ class Game:
                     bubble_type = -1
                 else:
                     print('invalid bubble type')
+                if bubble.speed[0] > 0:
+                    bubble_dir = 1
+                else:
+                    bubble_dir = -1
                 cur_state.append(bubble_type)
                 cur_state.append(bubble.size)
-                cur_state.append(bubble.rect.centerx)
-                cur_state.append(bubble.rect.centery)
-                cur_state.append(bubble.speed[0])
-                cur_state.append(bubble.speed[1])
+                cur_state.append(bubble.rect.centerx - cur_player_x)
+                cur_state.append(bubble.rect.centery - cur_player_y)
+                cur_state.append(bubble_dir)
             else:
-                cur_state += [0, 0, 0, 0, 0, 0]
+                cur_state += [0, 0, 0, 0, 0]
 
         if self.players[AI_PLAYER_NUM].weapon.is_active:
             weapon_active = 1
@@ -353,7 +358,7 @@ class Game:
         num_of_bubbles = len(self.balls) + len(self.hexagons)
 
         cur_state.append(num_of_bubbles)
-        cur_state.append(self.players[AI_PLAYER_NUM].rect.centerx)
+        cur_state.append(cur_player_x)
         cur_state.append(weapon_active)
 
         return cur_state
