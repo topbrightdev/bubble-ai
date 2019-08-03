@@ -252,7 +252,6 @@ class Game:
         game_copy.hexagons = []
         for hexagon in self.hexagons:
             game_copy.hexagons.append(hexagon.deep_copy_bubble())
-            game_copy.players = []
         # TODO
         game_copy.players = []
         for player in self.players:

@@ -48,4 +48,5 @@ class Hexagon(Bubble):
         Bubble.__init__(self, x, y, size, speed, 'hexagon.png')
 
     def deep_copy_bubble(self):
-        return Hexagon(self.rect.centerx, self.rect.centerx, self.size, self.speed)
+        speed = copy.deepcopy(self.speed)
+        return Hexagon(self.rect.centerx, self.rect.centerx, self.size, speed)
