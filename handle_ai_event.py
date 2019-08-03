@@ -13,6 +13,11 @@ def handle_ai_game_event(game):
     # if we finish the current path, construct a new one
     if (ai_spot_counter // LOOP_AT_EACH_MOVE_UPDATE >= ai_path_size):
         ai_path, ai_path_size = a_star(game, goal=None, heuristic=main_heuristic) # TODO check what is goal, here
+        # TODO check
+        if ai_path_size > REAL_PATH_LEN:
+            ai_path = ai_path[0:REAL_PATH_LEN]
+            ai_path_size = len(ai_path)
+        # TODO check
         ai_spot_counter = 0
     if len(ai_path) == 0:
         print("ai path len is 0")

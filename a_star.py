@@ -11,14 +11,16 @@ def a_star(start, goal, heuristic):
     start.update_g_function(0)
     start.update_f_function(heuristic(start, starting_score, path_size))
 
+    longest_path = []
+    longest_path_size = 0
     while len(fringe_set):
         current = heapq.heappop(fringe_set)
         path, path_size = reconstruct_path(cameFrom, current)
-        if len(visited_set) == MAX_VISITED_LEN or path_size >= MAX_PATH_SIZE:
-            return path, path_size
-        # elif path_size >= 5:
-        #     # TODO change
-        #     continue
+        if path_size >= longest_path_size:
+            longest_path = path
+            longest_path_size = path_size
+        if len(visited_set) >= MAX_VISITED_LEN or path_size >= MAX_PATH_SIZE:
+            return longest_path, longest_path_size
         visited_set.add(current)
 
         list_of_childs = current.get_successors()
@@ -47,7 +49,7 @@ def a_star(start, goal, heuristic):
             child_node.update_f_function(child_node.get_g_score() + heuristic(child_node, starting_score, child_path_size))
 
     # TODO we are here if every path is more then 5, and then take the last (random) path we checked
-    return path, path_size
+    return longest_path, longest_path_size
 
 
 def reconstruct_path(cameFrom, current):
