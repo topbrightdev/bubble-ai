@@ -63,7 +63,7 @@ def find_the_distance_from_the_closest_ball_at_x_axis(game, index = 0):
 
 def distance_between_ball_and_player(ball, game, index = 0):
     distance_x = ball.rect.centerx - game.players[index].rect.centerx
-    distance_y = ball.rect.centery - game.players[index].rect.centery
+    distance_y = ball.rect.centery - game.players[index].rect.bottom
     return math.sqrt(math.pow(distance_x, 2) + math.pow(distance_y, 2))
 
 
