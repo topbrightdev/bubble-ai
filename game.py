@@ -288,18 +288,18 @@ class Game:
         if action == MOVE_LEFT:
             self.players[0].moving_left = True
             for i in range(LOOP_AT_EACH_MOVE_UPDATE):
-                self.update()
                 if self.dead_player:
                     break
+                self.update()
             self.players[0].moving_left = False
             if self.dead_player:
                 return
         elif action == MOVE_RIGHT:
             self.players[0].moving_right = True
             for i in range(LOOP_AT_EACH_MOVE_UPDATE):
-                self.update()
                 if self.dead_player:
                     break
+                self.update()
             self.players[0].moving_right = False
             if self.dead_player:
                 return
@@ -307,9 +307,9 @@ class Game:
             if not self.players[0].weapon.is_active:
                 self.players[0].shoot()
             for i in range(LOOP_AT_EACH_MOVE_UPDATE):
-                self.update()
                 if self.dead_player:
                     break
+                self.update()
             if self.dead_player:
                 return
 
