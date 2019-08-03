@@ -21,13 +21,15 @@ RUN_LOCAL = True
 if RUN_LOCAL:
     APP_PATH = os.path.dirname(__file__) + '/'
     IMAGES_PATH = APP_PATH + 'images/'
-    SHOW_NN_GUI = False
+    PLAY_LOAD_LEVEL = False
     PLAY_BY_MYSELF = False
+    SHOW_NN_GUI = False
 else:
-    APP_PATH = os.path.dirname(__file__) + '/content/'
+    APP_PATH = os.path.dirname(__file__) + '/'
     IMAGES_PATH = APP_PATH
-    SHOW_NN_GUI = False
+    PLAY_LOAD_LEVEL = False
     PLAY_BY_MYSELF = False
+    SHOW_NN_GUI = False
 
 ## AI fields
 AI_PLAYER_NUM = 0
@@ -40,13 +42,14 @@ NN_ACTION_LIST = [MOVE_LEFT, MOVE_RIGHT, SHOOT]
 ACTIONS_LEN = len(NN_ACTION_LIST)
 
 # AI - astar fields
-LOOP_AT_EACH_MOVE_UPDATE = 3
-MAX_VISITED_LEN = 300
+LOOP_AT_EACH_MOVE_UPDATE = 1
+MAX_VISITED_LEN = 20
 MAX_PATH_SIZE = 8
 
 # NN fields
+EACH_TURN_REDUCE = 1
 BALLS_AT_STATE = 5
 EACH_BALL_REPR = 5
-GENERAL_REPR = 3
+GENERAL_REPR = 4
 STATE_LEN = (BALLS_AT_STATE*EACH_BALL_REPR) + GENERAL_REPR
-EPISODES = 1000
+EPISODES = 10000
