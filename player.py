@@ -34,11 +34,10 @@ class Player(pygame.sprite.Sprite):
         player_copy = Player()
         player_copy.image = self.image
         player_copy.rect = deepcopy(player_copy.rect)
+        player_copy.set_position(self.rect.centerx, self.rect.bottom)
+
         player_copy.weapon = self.weapon.deep_copy_weapon()
         player_copy.lives = self.lives
-        player_copy.set_position()
-
-        player_copy.set_position(self.rect.centerx, self.rect.bottom)
         player_copy.is_alive = self.is_alive
 
         return player_copy
