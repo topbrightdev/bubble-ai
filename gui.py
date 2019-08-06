@@ -4,6 +4,7 @@ from collections import OrderedDict
 from menu import *
 from handle_ai_event import *
 
+
 def init_gui():
     pygame.init()
     pygame.display.set_caption('Bubble Trouble')
@@ -176,7 +177,7 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
 
 def handle_game_event(game, font, clock, screen, main_menu, load_level_menu):
     if game.is_ai and not game.is_nn:
-        handle_ai_game_event(game)
+        handle_ai_game_event(game, font, clock, screen, main_menu, load_level_menu)
         # TODO maybe add quit option
     else:
         for event in pygame.event.get():

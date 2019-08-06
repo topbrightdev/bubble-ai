@@ -9,7 +9,7 @@ ai_path_size = 0
 ai_path = None
 
 
-def handle_ai_game_event(game):
+def handle_ai_game_event(game, font, clock, screen, main_menu, load_level_menu):
     global ai_spot_counter, ai_path_size, ai_path
     # if we finish the current path, construct a new one
     if (ai_spot_counter // LOOP_AT_EACH_MOVE_UPDATE >= ai_path_size):
