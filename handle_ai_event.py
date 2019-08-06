@@ -13,7 +13,7 @@ def handle_ai_game_event(game, font, clock, screen, main_menu, load_level_menu):
     global ai_spot_counter, ai_path_size, ai_path
     # if we finish the current path, construct a new one
     if (ai_spot_counter // LOOP_AT_EACH_MOVE_UPDATE >= ai_path_size):
-        ai_path, ai_path_size = a_star(start=game, is_goal=is_sub_goal_score_or_steps, heuristic=player_weapon_ball_heuristic,
+        ai_path, ai_path_size = a_star(start=game, is_goal=is_sub_goal_score_or_steps, heuristic=zero_heuristic,
                                        g_function=g_function_by_score_and_time)
         if ai_path_size > REAL_PATH_LEN:
             ai_path = ai_path[0:REAL_PATH_LEN]

@@ -300,11 +300,11 @@ class Game:
         if action == MOVE_LEFT:
             self.players[0].moving_left = True
             for i in range(LOOP_AT_EACH_MOVE_UPDATE):
-                if self.dead_player or self.is_restarted or not self.players[0].is_alive:
+                if self.dead_player or not self.players[0].is_alive:
                     break
                 self.update()
             self.players[0].moving_left = False
-            if self.dead_player or self.is_restarted or not self.players[0].is_alive:
+            if self.dead_player or  not self.players[0].is_alive:
                 return
         elif action == MOVE_RIGHT:
             self.players[0].moving_right = True
