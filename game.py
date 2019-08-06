@@ -44,6 +44,7 @@ class Game:
 
     def __lt__(self, other):
         # TODO implement better
+        return self.get_f_score() < other.get_f_score()
         if bool(random.getrandbits(1)):
             return self.get_f_score() < other.get_f_score()
         else:
@@ -55,13 +56,7 @@ class Game:
     def get_score(self):
         return self.score
 
-    def update_g_function(self, value):
-        self.g_score = value
-
-    def get_g_score(self):
-        return self.g_score
-
-    def update_f_function(self, value):
+    def update_f_score(self, value):
         self.f_score = value
 
     def get_f_score(self):

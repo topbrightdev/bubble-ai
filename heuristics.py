@@ -143,12 +143,16 @@ def keep_balls_on_one_side(game, starting_score, path_size):
     return - 10**len(game.balls + game.hexagons)
 
 
+def zero_heuristic(current, goal, path_size):
+    return 0
+
+
 def main_heuristic(game, starting_score, path_size):
     if not game.players[0].is_alive:
         return 1000000
-    return stay_in_center_heuristic(game, starting_score, path_size) * 100 +\
-            blow_up_ball_heuristic(game, starting_score, path_size) * 1 +\
-           pick_up_bonuses_heuristic(game, starting_score, path_size) * 1 +\
-           shoot_heuristic(game, starting_score, path_size) * 1 + \
-           is_level_completed(game, starting_score, path_size) * 1 +\
-           dont_die_heuristic(game, starting_score, path_size) * 1
+    return stay_in_center_heuristic(game, starting_score, path_size) * 0 +\
+            blow_up_ball_heuristic(game, starting_score, path_size) * 0 +\
+           pick_up_bonuses_heuristic(game, starting_score, path_size) * 0 +\
+           shoot_heuristic(game, starting_score, path_size) * 0 + \
+           is_level_completed(game, starting_score, path_size) * 0 +\
+           dont_die_heuristic(game, starting_score, path_size) * 0

@@ -181,39 +181,41 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
 def handle_game_event(game, font, clock, screen, main_menu, load_level_menu):
     if game.is_ai and not game.is_nn:
         handle_ai_game_event(game)
-    for event in pygame.event.get():
-        if event.type == KEYDOWN:
-            if event.key == K_LEFT:
-                game.players[0].moving_left = True
-            elif event.key == K_RIGHT:
-                game.players[0].moving_right = True
-            elif event.key == K_SPACE and not game.players[0].weapon.is_active:
-                game.players[0].is_shoot = True
-                game.players[0].shoot()
-            elif event.key == K_ESCAPE:
+        # TODO maybe add quit option
+    else:
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.key == K_LEFT:
+                    game.players[0].moving_left = True
+                elif event.key == K_RIGHT:
+                    game.players[0].moving_right = True
+                elif event.key == K_SPACE and not game.players[0].weapon.is_active:
+                    game.players[0].is_shoot = True
+                    game.players[0].shoot()
+                elif event.key == K_ESCAPE:
+                    quit_game(game, font, clock, screen, main_menu, load_level_menu)
+                if game.is_multiplayer:
+                    if event.key == K_a:
+                        game.players[1].moving_left = True
+                    elif event.key == K_d:
+                        game.players[1].moving_right = True
+                    elif event.key == K_LCTRL and \
+                            not game.players[1].weapon.is_active:
+                        game.players[1].shoot()
+            if event.type == KEYUP:
+                if event.key == K_LEFT:
+                    game.players[0].moving_left = False
+                elif event.key == K_RIGHT:
+                    game.players[0].moving_right = False
+                elif event.key == K_SPACE:
+                    game.players[0].is_shoot = False
+                if game.is_multiplayer:
+                    if event.key == K_a:
+                        game.players[1].moving_left = False
+                    elif event.key == K_d:
+                        game.players[1].moving_right = False
+            if event.type == QUIT:
                 quit_game(game, font, clock, screen, main_menu, load_level_menu)
-            if game.is_multiplayer:
-                if event.key == K_a:
-                    game.players[1].moving_left = True
-                elif event.key == K_d:
-                    game.players[1].moving_right = True
-                elif event.key == K_LCTRL and \
-                        not game.players[1].weapon.is_active:
-                    game.players[1].shoot()
-        if event.type == KEYUP:
-            if event.key == K_LEFT:
-                game.players[0].moving_left = False
-            elif event.key == K_RIGHT:
-                game.players[0].moving_right = False
-            elif event.key == K_SPACE:
-                game.players[0].is_shoot = False
-            if game.is_multiplayer:
-                if event.key == K_a:
-                    game.players[1].moving_left = False
-                elif event.key == K_d:
-                    game.players[1].moving_right = False
-        if event.type == QUIT:
-            quit_game(game, font, clock, screen, main_menu, load_level_menu)
 
 
 def handle_menu_event(menu, game, font, clock, screen, main_menu, load_level_menu):
