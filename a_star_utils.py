@@ -6,7 +6,7 @@ BALL_WORTH_BY_SIZE = {1: 1,
 
 
 def g_function_by_score_and_time(game):
-    return game.get_score() + game.time_left
+    return - (game.get_score() + game.time_left)
 
 
 def is_sub_goal_by_score(game, start):
