@@ -38,6 +38,14 @@ def find_the_distance_from_the_closest_ball(game, index = 0):
             closest_ball = cur_ball
     return closest_ball, distance_from_closest_ball
 
+def player_weapon_ball_heuristic(game):
+    return - (50 - distance_from_weapon_and_ball(game) + find_the_distance_from_the_closest_ball_at_x_axis(game)[1])
+
+def distance_from_weapon_and_ball(game):
+    if game.players[0].weapon.is_active:
+        return min([abs(ball.rect.centerx - game.players[0].weapon.rect.centerx) for ball in game.balls + game.hexagons])
+    return WINDOWWIDTH
+
 
 def find_the_distance_from_the_closest_ball_at_x_axis(game, index = 0):
     if len(game.balls) != 0:
