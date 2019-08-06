@@ -38,10 +38,26 @@ def find_the_distance_from_the_closest_ball(game, index = 0):
             closest_ball = cur_ball
     return closest_ball, distance_from_closest_ball
 
+
 def player_weapon_ball_heuristic(game):
     if not game.balls and not game.hexagons:
-        return 0
-    return - (50 - distance_from_weapon_and_ball(game) + find_the_distance_from_the_closest_ball_at_x_axis(game)[1])
+        return - 50
+    weapon_dist = distance_from_weapon_and_ball(game)
+    agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
+    # weapon inactive
+    # if weapon_dist == WINDOWWIDTH:
+    #     return agent_dist[1]
+    # # weapon active
+    # else:
+    #     return - agent_dist[1]
+    if agent_dist < 50:
+        return (50-agent_dist) * 1000
+    return agent_dist
+    # return min(2*weapon_dist, agent_dist)
+    # print('weapon dist: ', str(distance_from_weapon_and_ball(game)))
+    # print('agent_ dist: ', str(find_the_distance_from_the_closest_ball_at_x_axis(game)[1]))
+    # return - (50 - distance_from_weapon_and_ball(game)/100 + find_the_distance_from_the_closest_ball_at_x_axis(game)[1]/100)
+
 
 def distance_from_weapon_and_ball(game):
     if game.players[0].weapon.is_active:
