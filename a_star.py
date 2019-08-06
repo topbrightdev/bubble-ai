@@ -22,8 +22,8 @@ def a_star(start, is_goal, heuristic, g_function):
         for child in list_of_childs:
             child_node, child_action = child
             # TODO maybe return that later (after we check everything works)
-            # if child_node.dead_player:
-            #     continue
+            if child_node.dead_player:
+                continue
             # TODO it will never reached (this isn't the same object, we need to calculate equal game function)
             for node in visited_set:
                 if child_node.check_if_equal(node):
