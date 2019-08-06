@@ -38,7 +38,7 @@ def a_star(start, is_goal, heuristic, g_function):
 
             # This path is the best until now
             came_from[child_node] = [current, child_action]
-            child_node.update_f_function(g + h)
+            child_node.update_f_score(g + h)
     # TODO check if we get here (only if no goal found)
     return None
 

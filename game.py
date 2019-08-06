@@ -98,10 +98,6 @@ class Game:
                 size = hexagon['size']
                 speed = hexagon['speed']
                 self.hexagons.append(Hexagon(x, y, size, speed))
-        self._start_timer()
-
-    def _start_timer(self):
-        self._timer(1, self._tick_second, self.time_left)
 
     def _check_for_collisions(self):
         for player in self.players:
@@ -214,21 +210,11 @@ class Game:
             self.level_completed = True
             if self.level == self.max_level:
                 self.is_completed = True
+        self.tick_second()
 
         return self
 
-    def _timer(self, interval, worker_func, iterations=0):
-        if iterations and not self.dead_player and not \
-                self.level_completed and not self.is_restarted:
-            Timer(
-
-                interval, self._timer,
-                [interval, worker_func, 0 if iterations ==
-                    0 else iterations - 1]
-            ).start()
-            worker_func()
-
-    def _tick_second(self):
+    def tick_second(self):
         self.time_left -= 1
         if self.time_left == 0:
             for player in self.players:

@@ -45,8 +45,6 @@ def start_level(level, game, font, clock, screen, main_menu, load_level_menu):
             pygame.time.delay(1000)
         if game.is_restarted:
             game.is_restarted = False
-            game._start_timer()
-        clock.tick(FPS)
 
 
 def start_main_menu(game, font, clock, screen, main_menu, load_level_menu):
@@ -55,7 +53,6 @@ def start_main_menu(game, font, clock, screen, main_menu, load_level_menu):
         main_menu.draw()
         handle_menu_event(main_menu, game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
-        clock.tick(FPS)
 
 
 def start_load_level_menu(game, font, clock, screen, main_menu, load_level_menu):
@@ -64,7 +61,6 @@ def start_load_level_menu(game, font, clock, screen, main_menu, load_level_menu)
         load_level_menu.draw()
         handle_menu_event(load_level_menu, game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
-        clock.tick(FPS)
 
 
 def start_single_player_level_menu(game, font, clock, screen, main_menu, load_level_menu):

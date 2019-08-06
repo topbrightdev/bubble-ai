@@ -143,7 +143,7 @@ def keep_balls_on_one_side(game, starting_score, path_size):
     return - 10**len(game.balls + game.hexagons)
 
 
-def zero_heuristic(current, goal, path_size):
+def zero_heuristic(game):
     return 0
 
 
