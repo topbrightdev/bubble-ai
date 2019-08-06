@@ -3,14 +3,15 @@ import heapq
 
 def a_star(start, is_goal, heuristic, g_function):
     visited_set = set()
-    fringe_set = [start]
+    fringe_heap = []
+    heapq.heappush(fringe_heap, start)
     g = g_function(start)
     h = heuristic(start)
     start.update_f_score(g + h)
     came_from = {}
 
-    while len(fringe_set):
-        current = heapq.heappop(fringe_set)
+    while len(fringe_heap):
+        current = heapq.heappop(fringe_heap)
         path, path_size = reconstruct_path(came_from, current)
         if is_goal(current, start):
             return path, path_size
@@ -29,8 +30,8 @@ def a_star(start, is_goal, heuristic, g_function):
 
             g = g_function(child_node)
             h = heuristic(child_node)
-            if child_node not in fringe_set:
-                fringe_set.append(child_node)
+            if child_node not in fringe_heap:
+                heapq.heappush(fringe_heap, child_node)
                 # TODO we need to check if we get the same state from two or more other ways?
             # TODO it will never reached (this isn't the same object, we need to calculate equal game function)
             # elif g + h <= child_node.get_f_score(): # if we already discovered in this node, with better g
