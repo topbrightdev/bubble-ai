@@ -3,11 +3,7 @@ import heapq
 
 def a_star(start, is_goal, heuristic, g_function):
     visited_set = set()
-    fringe_heap = []
-    heapq.heappush(fringe_heap, start)
-    g = g_function(start)
-    h = heuristic(start)
-    start.update_f_score(g + h)
+    fringe_heap = [start]
     came_from = {}
 
     while len(fringe_heap):
