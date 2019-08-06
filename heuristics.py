@@ -42,6 +42,8 @@ def player_weapon_ball_heuristic(game):
     return - (50 - distance_from_weapon_and_ball(game) + find_the_distance_from_the_closest_ball_at_x_axis(game)[1])
 
 def distance_from_weapon_and_ball(game):
+    if not game.balls and not game.hexagons:
+        return 0
     if game.players[0].weapon.is_active:
         return min([abs(ball.rect.centerx - game.players[0].weapon.rect.centerx) for ball in game.balls + game.hexagons])
     return WINDOWWIDTH
