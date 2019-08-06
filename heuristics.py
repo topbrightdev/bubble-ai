@@ -123,6 +123,26 @@ def distance_between_bonus_and_player(bonus, game, index = 0):
     return distance
 
 
+def distance_sign_between_ball_and_player(ball,game,index=0):
+    return ball.rect.centerx - game.players[index].rect.centerx
+
+
+def keep_balls_on_one_side(game, starting_score, path_size):
+    distances_sign = []
+    for cur_ball in game.balls + game.hexagons:
+        distances_sign.append(distance_sign_between_ball_and_player(cur_ball, game))
+    all_pos = True
+    all_neg = True
+    for dist in distances_sign:
+        if dist > 0:
+            all_neg = False
+        else:
+            all_pos = False
+        if not all_pos or not all_neg:
+            return 100
+    return - 10**len(game.balls + game.hexagons)
+
+
 def main_heuristic(game, starting_score, path_size):
     if not game.players[0].is_alive:
         return 1000000
