@@ -25,9 +25,9 @@ def a_star(start, is_goal, heuristic, g_function):
             if child_node.dead_player:
                 continue
             # TODO it will never reached (this isn't the same object, we need to calculate equal game function)
-            for node in visited_set:
-                if child_node.check_if_equal(node):
-                    continue
+            # for node in visited_set:
+            #     if child_node.check_if_equal(node):
+            #         continue
 
             g = g_function(child_node)
             h = heuristic(child_node)
@@ -42,7 +42,7 @@ def a_star(start, is_goal, heuristic, g_function):
             came_from[child_node] = [current, child_action]
             child_node.update_f_score(g + h)
     # TODO check if we get here (only if no goal found)
-    return None
+    return [], 0
 
 
 def reconstruct_path(came_from, current):
