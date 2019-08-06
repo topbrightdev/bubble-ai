@@ -118,7 +118,7 @@ def draw_message(message, colour, game, font, clock, screen, main_menu, load_lev
 
 
 def draw_timer(game, font, clock, screen, main_menu, load_level_menu):
-    timer = font.render(str(game.time_left), 1, RED)
+    timer = font.render(str(game.get_time_left()), 1, BLACK)
     rect = timer.get_rect()
     rect.bottomleft = 10, WINDOWHEIGHT - 10
     screen.blit(timer, rect)

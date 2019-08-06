@@ -11,6 +11,9 @@ class Weapon(pygame.sprite.Sprite):
         self.image = pygame.image.load(IMAGES_PATH + 'arrow.png')
         self.rect = self.image.get_rect(centerx=x, top=y)
 
+    def __eq__(self, other):
+        return self.rect.centerx == other.rect.centerx and self.rect.top == other.rect.top
+
     def update(self):
         if self.is_active:
             if self.rect.top <= 0:

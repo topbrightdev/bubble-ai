@@ -14,6 +14,12 @@ class Bubble(pygame.sprite.Sprite):
         self.size = size
         self.speed = speed
 
+    def __eq__(self, other):
+        if self.rect.centerx == other.rect.centerx and self.rect.centery == other.rect.centery:
+            if self.size == other.size:
+                return True
+        return False
+
     def update(self):
         self.rect = self.rect.move(self.speed)
         if self.rect.left < 0 or self.rect.right > WINDOWWIDTH:

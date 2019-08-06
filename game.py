@@ -4,6 +4,7 @@ from threading import Timer
 import random
 import json
 import copy
+import numpy as np
 
 import heuristics
 from bubbles import *
@@ -49,6 +50,37 @@ class Game:
             return self.get_f_score() < other.get_f_score()
         else:
             return self.get_f_score() <= other.get_f_score()
+
+    def check_if_equal(self, other):
+        if self.get_time_left() == other.get_time_left():
+            if len(self.balls) == len(other.balls) and len(self.hexagons) == len(other.hexagons):
+                for player in self.players:
+                    does_have_equal_player = False
+                    for other_player in other.players:
+                        if player == other_player:
+                            does_have_equal_player = True
+                            break
+                    if not does_have_equal_player:
+                        return False
+                for bubble in self.balls:
+                    does_have_equal_bubble = False
+                    for other_bubble in other.balls:
+                        if bubble == other_bubble:
+                            does_have_equal_bubble = True
+                            break
+                    if not does_have_equal_bubble:
+                        return False
+                for bubble in self.hexagons:
+                    does_have_equal_bubble = False
+                    for other_bubble in other.hexagons:
+                        if bubble == other_bubble:
+                            does_have_equal_bubble = True
+                            break
+                    if not does_have_equal_bubble:
+                        return False
+                return True
+        return False
+
 
     def add_to_score(self, to_add):
         self.score += to_add
@@ -151,7 +183,7 @@ class Game:
         if bonus == BONUS_LIFE:
             player.lives += 1
         elif bonus == BONUS_TIME:
-            self.time_left += 10
+            self.time_left += 50
 
     def _split_ball(self, ball_index):
         ball = self.balls[ball_index]
@@ -215,13 +247,13 @@ class Game:
         return self
 
     def tick_second(self):
-        self.time_left -= 1
-        if self.time_left == 0:
+        self.time_left -= 0.1
+        if self.time_left <= 0:
             for player in self.players:
                 self._decrease_lives(player)
 
     def get_time_left(self):
-        return self.time_left
+        return np.ceil(self.time_left)
 
     def deep_copy_game(self): # TODO check if ok
         game_copy = Game(level=self.level)
@@ -268,29 +300,31 @@ class Game:
         if action == MOVE_LEFT:
             self.players[0].moving_left = True
             for i in range(LOOP_AT_EACH_MOVE_UPDATE):
-                if self.dead_player:
+                if self.dead_player or self.is_restarted or not self.players[0].is_alive:
                     break
                 self.update()
             self.players[0].moving_left = False
-            if self.dead_player:
+            if self.dead_player or self.is_restarted or not self.players[0].is_alive:
                 return
         elif action == MOVE_RIGHT:
             self.players[0].moving_right = True
             for i in range(LOOP_AT_EACH_MOVE_UPDATE):
-                if self.dead_player:
+                if self.dead_player or self.is_restarted or not self.players[0].is_alive:
                     break
                 self.update()
             self.players[0].moving_right = False
-            if self.dead_player:
+            if self.dead_player or self.is_restarted or not self.players[0].is_alive:
                 return
         elif action == SHOOT:
+            if self.dead_player or self.is_restarted or not self.players[0].is_alive:
+                return
             if not self.players[0].weapon.is_active:
                 self.players[0].shoot()
             for i in range(LOOP_AT_EACH_MOVE_UPDATE):
-                if self.dead_player:
+                if self.dead_player or self.is_restarted or not self.players[0].is_alive:
                     break
                 self.update()
-            if self.dead_player:
+            if self.dead_player or self.is_restarted or not self.players[0].is_alive:
                 return
 
     def get_successors(self):

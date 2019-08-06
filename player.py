@@ -14,6 +14,13 @@ class Player(pygame.sprite.Sprite):
         self.set_position()
         self.is_alive = True
 
+    def __eq__(self, other):
+        if self.rect.centerx == other.rect.centerx:
+            if self.is_shoot == other.is_shoot:
+                if self.weapon == other.weapon:
+                    return True
+        return False
+
     def shoot(self):
         self.weapon = Weapon(self.rect.centerx, self.rect.top)
         self.weapon.is_active = True

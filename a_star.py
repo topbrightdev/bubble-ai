@@ -25,8 +25,9 @@ def a_star(start, is_goal, heuristic, g_function):
             # if child_node.dead_player:
             #     continue
             # TODO it will never reached (this isn't the same object, we need to calculate equal game function)
-            # elif child_node in visited_set:
-            #     continue # Ignore the childs which is already evaluated
+            for node in visited_set:
+                if child_node.check_if_equal(node):
+                    continue
 
             g = g_function(child_node)
             h = heuristic(child_node)
