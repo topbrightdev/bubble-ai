@@ -40,7 +40,7 @@ def is_sub_goal_by_blow_up_ball(game, start):
 
 def is_sub_goal_by_steps(game, start):
     # print(start.time_left - game.time_left)
-    return start.time_left - game.time_left >= 0.3
+    return start.time_left - game.time_left >= 0.7
 
 # TODO implement efficient
 def calc_worth_of_balls(game):
