@@ -173,6 +173,10 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
         draw_message('Well done! Level completed!', BLUE, game, font, clock, screen, main_menu, load_level_menu)
     if game.is_restarted:
         draw_message('Get ready!', BLUE, game, font, clock, screen, main_menu, load_level_menu)
+    for player in game.players:
+        if player.lives == 0:
+            draw_message('hoo.. next time you will be better', PURPLE, game, font, clock, screen, main_menu, load_level_menu)
+
 
 
 def handle_game_event(game, font, clock, screen, main_menu, load_level_menu):
