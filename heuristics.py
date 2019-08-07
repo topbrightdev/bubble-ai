@@ -108,14 +108,8 @@ def find_the_distance_from_the_closest_smallest_ball(game):
 
 
 def time_from_bubble_and_player(game, bubble, axis=0, player_index=0):
-    if axis == 0:
-        player_spot = game.players[player_index].rect.centerx
-        bubble_spot = bubble.rect.centerx
-    else:
-        player_spot = 0
-        bubble_spot = bubble.rect.centery
+    dist_from_bubble = dist_from_bubble_and_player(game, bubble, axis, player_index)
     bubble_axis_speed = abs(bubble.speed[axis])
-    dist_from_bubble = abs(player_spot - bubble_spot)
     if axis == 0:
         total_speed = max(PLAYER_SPEED + bubble_axis_speed, 1)
     else:
@@ -123,6 +117,17 @@ def time_from_bubble_and_player(game, bubble, axis=0, player_index=0):
         total_speed = max(bubble_axis_speed + 2 * np.sqrt(dist_from_bubble), 1)
     time_from_bubble = int(np.ceil(dist_from_bubble / total_speed))
     return time_from_bubble
+
+
+def dist_from_bubble_and_player(game, bubble, axis=0, player_index=0):
+    if axis == 0:
+        player_spot = game.players[player_index].rect.centerx
+        bubble_spot = bubble.rect.centerx
+    else:
+        player_spot = 0
+        bubble_spot = bubble.rect.centery
+    dist_from_bubble = abs(player_spot - bubble_spot)
+    return dist_from_bubble
 
 
 def time_from_closest_bubble_at_axis(game, axis=0, player_index=0):
@@ -179,6 +184,16 @@ def stay_in_ball_area_but_not_too_close_no_admissible_x_axis_heuristic(game):
     agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
     if agent_dist < DANGER_X_DIST_FROM_BUBBLE:
         return (DANGER_X_DIST_FROM_BUBBLE - agent_dist) * 1000
+    return agent_dist
+
+
+def stay_in_ball_area_but_not_too_close_no_admissible_x_axis_danger_both_axis_heuristic(game):
+    if not game.balls and not game.hexagons:
+        return 0
+    close_bubble, agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)
+    if agent_dist < DANGER_X_DIST_FROM_BUBBLE:
+        if dist_from_bubble_and_player(game, close_bubble, axis=1, player_index=0):
+            return (DANGER_X_DIST_FROM_BUBBLE - agent_dist) * 1000
     return agent_dist
 
 

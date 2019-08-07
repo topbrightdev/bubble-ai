@@ -5,12 +5,14 @@ def a_star(start, is_goal, heuristic, g_function):
     visited_set = set()
     fringe_heap = [start]
     came_from = {}
+    open_nodes = 0
 
     while len(fringe_heap):
         current = heapq.heappop(fringe_heap)
+        open_nodes += 1
         if is_goal(current, start):
             path, path_size = reconstruct_path(came_from, current)
-            return path, path_size
+            return path, path_size, open_nodes
 
         visited_set.add(current)
 
@@ -38,7 +40,7 @@ def a_star(start, is_goal, heuristic, g_function):
             came_from[child_node] = [current, child_action]
             child_node.update_f_score(g + h)
     # TODO check if we get here (only if no goal found)
-    return [], 0
+    return [], 0, open_nodes
 
 
 def reconstruct_path(came_from, current):
