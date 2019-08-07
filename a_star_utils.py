@@ -26,7 +26,7 @@ def is_sub_goal_time_bonus(game, start):
 
 
 def is_sub_goal_by_score(game, start):
-    return game.get_score() > start.get_score()
+    return game.get_score() > start.get_score() or game.level_completed
 
 
 def is_sub_goal_score_or_steps(game, start):
