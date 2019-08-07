@@ -1,5 +1,6 @@
 import math
 from settings import *
+import random
 
 
 def is_level_completed(game, starting_score, path_size):
@@ -57,6 +58,21 @@ def player_weapon_ball_heuristic(game):
     # print('weapon dist: ', str(distance_from_weapon_and_ball(game)))
     # print('agent_ dist: ', str(find_the_distance_from_the_closest_ball_at_x_axis(game)[1]))
     # return - (50 - distance_from_weapon_and_ball(game)/100 + find_the_distance_from_the_closest_ball_at_x_axis(game)[1]/100)
+
+def player_bonus_and_ball_heuristic(game):
+    if not game.balls and not game.hexagons:
+        return - 50
+    agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
+    if agent_dist < 50:
+        return (50-agent_dist) * 1000
+    if agent_dist > pick_up_bonuses_heuristic(game) and pick_up_bonuses_heuristic(game) != 0:
+        return pick_up_bonuses_heuristic(game)
+    return agent_dist
+
+
+
+def random_player_heuristic(game):
+    return random.randrange(1, 50)
 
 
 def distance_from_weapon_and_ball(game):
@@ -134,13 +150,15 @@ def shoot_heuristic(game, starting_score, path_size):
     return 0
 
 
-def pick_up_bonuses_heuristic(game, starting_score, path_size):
+def pick_up_bonuses_heuristic(game):
     if len(game.bonuses) == 0:
         return 0
     distance_from_closest_bonus = WINDOWWIDTH + 1
     for bonus in game.bonuses:
         if distance_between_bonus_and_player(bonus, game) < distance_from_closest_bonus:
             distance_from_closest_bonus = distance_between_bonus_and_player(bonus, game)
+    if distance_from_closest_bonus == WINDOWWIDTH + 1:
+        return 0
     return distance_from_closest_bonus
 
 
