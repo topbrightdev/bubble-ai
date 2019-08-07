@@ -163,6 +163,8 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
     draw_score(game, font, clock, screen, main_menu, load_level_menu)
     if game.game_over:
         draw_message('Game over!', RED, game, font, clock, screen, main_menu, load_level_menu)
+        pygame.display.update()
+        pygame.time.delay(3000)
         start_main_menu(game, font, clock, screen, main_menu, load_level_menu)
     if game.is_completed:
         draw_message('Congratulations! You win!!!', PURPLE, game, font, clock, screen, main_menu, load_level_menu)
@@ -173,9 +175,6 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
         draw_message('Well done! Level completed!', BLUE, game, font, clock, screen, main_menu, load_level_menu)
     if game.is_restarted:
         draw_message('Get ready!', BLUE, game, font, clock, screen, main_menu, load_level_menu)
-    for player in game.players:
-        if player.lives == 0:
-            draw_message('hoo.. next time you will be better', PURPLE, game, font, clock, screen, main_menu, load_level_menu)
 
 
 

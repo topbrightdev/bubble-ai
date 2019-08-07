@@ -95,6 +95,7 @@ def stay_in_ball_area_but_not_too_close_heuristic(game):
             return (max(TOO_CLOSE_X_DIST-time_to_collide_at_x, TOO_CLOSE_Y_DIST-time_to_collide_at_y)) * 1000
     return time_to_collide_at_x
 
+
 def player_bonus_and_ball_heuristic(game):
     if not game.balls and not game.hexagons:
         return - 50
@@ -105,6 +106,11 @@ def player_bonus_and_ball_heuristic(game):
         return pick_up_bonuses_heuristic(game)
     return agent_dist
 
+
+def die_heuristic(game):
+    # if game.players[0].weapon.is_active:
+    #     return 10000
+    return find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
 
 
 def random_player_heuristic(game):
