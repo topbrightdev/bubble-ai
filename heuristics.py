@@ -59,7 +59,7 @@ def time_from_bubble_and_player(game, bubble, axis=0, player_index=0):
     return time_from_bubble
 
 
-def time_from_closest_bubble_at_x_axis(game, axis=0, player_index=0):
+def time_from_closest_bubble_at_axis(game, axis=0, player_index=0):
     if len(game.balls) != 0:
         cur_bubble = game.balls[0]
         time_from_closest_bubble = time_from_bubble_and_player(game, cur_bubble, axis, player_index)
@@ -88,7 +88,7 @@ def stay_in_ball_area_but_not_too_close_heuristic(game):
         return - BLOW_UP_BALL_SCORE
     TOO_CLOSE_X_DIST = 10
     TOO_CLOSE_Y_DIST = 10
-    closest_ball_at_x, time_to_collide_at_x = time_from_closest_bubble_at_x_axis(game, axis=0)
+    closest_ball_at_x, time_to_collide_at_x = time_from_closest_bubble_at_axis(game, axis=0)
     if time_to_collide_at_x < TOO_CLOSE_X_DIST:
         time_to_collide_at_y = time_from_bubble_and_player(game, closest_ball_at_x, axis=1, player_index=0)
         if time_to_collide_at_y < TOO_CLOSE_Y_DIST:
@@ -121,7 +121,7 @@ def stay_in_center_heuristic(game):
     if not game.balls and not game.hexagons:
         return - BLOW_UP_BALL_SCORE
     x_center = WINDOWWIDTH // 2
-    time_to_collide = time_from_closest_bubble_at_x_axis(game)[1]
+    time_to_collide = time_from_closest_bubble_at_axis(game)[1]
     agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
     if agent_dist < 50:
         return (50 - agent_dist) * 1000
