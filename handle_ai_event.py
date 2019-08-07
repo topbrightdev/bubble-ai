@@ -12,9 +12,10 @@ ai_path = None
 def handle_ai_game_event(game, font, clock, screen, main_menu, load_level_menu):
     global ai_spot_counter, ai_path_size, ai_path
     # if we finish the current path, construct a new one
+    open_nodes = 0
     if (ai_spot_counter // LOOP_AT_EACH_MOVE_UPDATE >= ai_path_size):
-        ai_path, ai_path_size = a_star(start=game, is_goal=is_sub_goal_steps_score_bonuses,
-                                       heuristic=stay_in_ball_area_but_not_too_close_heuristic,
+        ai_path, ai_path_size, open_nodes = a_star(start=game, is_goal=is_sub_goal_steps_score_bonuses,
+                                       heuristic=stay_in_ball_area_but_not_too_close_no_admissible_x_axis_danger_both_axis_heuristic,
                                        g_function=g_function_by_steps)
         if ai_path_size > REAL_PATH_LEN:
             ai_path = ai_path[0:REAL_PATH_LEN]
@@ -22,12 +23,13 @@ def handle_ai_game_event(game, font, clock, screen, main_menu, load_level_menu):
         ai_spot_counter = 0
     if len(ai_path) == 0:
         print("ai path len is 0")
-        return
+        return open_nodes
 
     real_spot_at_path = ai_spot_counter // LOOP_AT_EACH_MOVE_UPDATE
     cur_action = ai_path[real_spot_at_path]
     play_single_action(game, cur_action, player_num=AI_PLAYER_NUM)
     ai_spot_counter += 1
+    return open_nodes
 
 
 def play_single_action(game, cur_action, player_num=0):

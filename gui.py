@@ -3,6 +3,7 @@ from collections import OrderedDict
 
 from menu import *
 from handle_ai_event import *
+total_open_nodes = 0
 
 
 def init_gui():
@@ -162,6 +163,7 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
     draw_timer(game, font, clock, screen, main_menu, load_level_menu)
     draw_score(game, font, clock, screen, main_menu, load_level_menu)
     if game.game_over:
+        print("number of open nodes: %s" % handle_game_event)
         draw_message('Game over!', RED, game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
         pygame.time.delay(3000)
@@ -180,7 +182,9 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
 
 def handle_game_event(game, font, clock, screen, main_menu, load_level_menu):
     if game.is_ai and not game.is_nn:
-        handle_ai_game_event(game, font, clock, screen, main_menu, load_level_menu)
+        global total_open_nodes
+        open_nodes = handle_ai_game_event(game, font, clock, screen, main_menu, load_level_menu)
+        total_open_nodes += open_nodes
         # TODO maybe add quit option
     else:
         for event in pygame.event.get():
