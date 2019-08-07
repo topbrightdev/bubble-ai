@@ -39,24 +39,57 @@ def find_the_distance_from_the_closest_ball(game, index = 0):
     return closest_ball, distance_from_closest_ball
 
 
-def player_weapon_ball_heuristic(game):
+def time_from_closest_bubble_at_x_axis(game, player_index = 0):
+    player_x = game.players[player_index].rect.centerx
+    if len(game.balls) != 0:
+        cur_bubble = game.balls[0]
+        bubble_x = cur_bubble.rect.centerx
+        bubble_x_speed = cur_bubble.speed[0]
+        dist_from_bubble = abs(player_x - bubble_x)
+        total_speed = PLAYER_SPEED + bubble_x_speed
+        time_from_closest_bubble = dist_from_bubble / total_speed
+        closest_bubble = cur_bubble
+    else:
+        cur_bubble = game.hexagons[0]
+        bubble_x = cur_bubble.rect.centerx
+        bubble_x_speed = cur_bubble.speed[0]
+        dist_from_bubble = abs(player_x - bubble_x)
+        total_speed = PLAYER_SPEED + bubble_x_speed
+        time_from_closest_bubble = dist_from_bubble / total_speed
+        closest_bubble = cur_bubble
+    for i in range(1, len(game.balls)):
+        cur_bubble = game.balls[i]
+        bubble_x = cur_bubble.rect.centerx
+        bubble_x_speed = cur_bubble.speed[0]
+        dist_from_bubble = abs(player_x - bubble_x)
+        total_speed = PLAYER_SPEED + bubble_x_speed
+        time_from_bubble = dist_from_bubble / total_speed
+
+        if time_from_bubble < time_from_closest_bubble:
+            time_from_closest_bubble = time_from_bubble
+            closest_bubble = cur_bubble
+    for i in range(1, len(game.hexagons)):
+        cur_bubble = game.hexagons[i]
+        bubble_x = cur_bubble.rect.centerx
+        bubble_x_speed = cur_bubble.speed[0]
+        dist_from_bubble = abs(player_x - bubble_x)
+        total_speed = PLAYER_SPEED + bubble_x_speed
+        time_from_bubble = dist_from_bubble / total_speed
+
+        if time_from_bubble < time_from_closest_bubble:
+            time_from_closest_bubble = time_from_bubble
+            closest_bubble = cur_bubble
+    return closest_bubble, time_from_closest_bubble
+
+
+def stay_in_ball_area_but_not_too_close_heuristic(game):
     if not game.balls and not game.hexagons:
-        return - 50
-    weapon_dist = distance_from_weapon_and_ball(game)
-    agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
-    # weapon inactive
-    # if weapon_dist == WINDOWWIDTH:
-    #     return agent_dist[1]
-    # # weapon active
-    # else:
-    #     return - agent_dist[1]
-    if agent_dist < 50:
-        return (50-agent_dist) * 1000
-    return agent_dist
-    # return min(2*weapon_dist, agent_dist)
-    # print('weapon dist: ', str(distance_from_weapon_and_ball(game)))
-    # print('agent_ dist: ', str(find_the_distance_from_the_closest_ball_at_x_axis(game)[1]))
-    # return - (50 - distance_from_weapon_and_ball(game)/100 + find_the_distance_from_the_closest_ball_at_x_axis(game)[1]/100)
+        return - BLOW_UP_BALL_SCORE
+    TOO_CLOSE_DIST = 10
+    time_to_collide = time_from_closest_bubble_at_x_axis(game)[1]
+    if time_to_collide < TOO_CLOSE_DIST:
+        return (TOO_CLOSE_DIST-time_to_collide) * 1000
+    return time_to_collide
 
 
 def distance_from_weapon_and_ball(game):
