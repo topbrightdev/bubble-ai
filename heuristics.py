@@ -1,6 +1,7 @@
 import math
 from settings import *
 import random
+import numpy as np
 
 
 def is_level_completed(game, starting_score, path_size):
@@ -40,30 +41,50 @@ def find_the_distance_from_the_closest_ball(game, index = 0):
     return closest_ball, distance_from_closest_ball
 
 
-def time_from_closest_bubble_at_x_axis(game, player_index = 0):
+def time_from_closest_bubble_at_x_axis(game, axis=0, player_index=0):
     player_x = game.players[player_index].rect.centerx
     if len(game.balls) != 0:
         cur_bubble = game.balls[0]
-        bubble_x = cur_bubble.rect.centerx
-        bubble_x_speed = abs(cur_bubble.speed[0])
-        dist_from_bubble = abs(player_x - bubble_x)
-        total_speed = PLAYER_SPEED + bubble_x_speed
+        if axis == 0:
+            bubble_spot = cur_bubble.rect.centerx
+        else:
+            bubble_spot = cur_bubble.rect.centery
+        bubble_axis_speed = abs(cur_bubble.speed[axis])
+        dist_from_bubble = abs(player_x - bubble_spot)
+        if axis == 0:
+            total_speed = PLAYER_SPEED + bubble_axis_speed
+        else:
+            # TODO: it's for addmissable
+            total_speed = max(bubble_axis_speed + 2 * np.sqrt(dist_from_bubble), 1)
         time_from_closest_bubble = dist_from_bubble / total_speed
         closest_bubble = cur_bubble
     else:
         cur_bubble = game.hexagons[0]
-        bubble_x = cur_bubble.rect.centerx
-        bubble_x_speed = abs(cur_bubble.speed[0])
-        dist_from_bubble = abs(player_x - bubble_x)
-        total_speed = PLAYER_SPEED + bubble_x_speed
+        if axis == 0:
+            bubble_spot = cur_bubble.rect.centerx
+        else:
+            bubble_spot = cur_bubble.rect.centery
+        bubble_axis_speed = abs(cur_bubble.speed[axis])
+        dist_from_bubble = abs(player_x - bubble_spot)
+        if axis == 0:
+            total_speed = PLAYER_SPEED + bubble_axis_speed
+        else:
+            total_speed = bubble_axis_speed
         time_from_closest_bubble = dist_from_bubble / total_speed
         closest_bubble = cur_bubble
     for i in range(1, len(game.balls)):
         cur_bubble = game.balls[i]
-        bubble_x = cur_bubble.rect.centerx
-        bubble_x_speed = abs(cur_bubble.speed[0])
-        dist_from_bubble = abs(player_x - bubble_x)
-        total_speed = PLAYER_SPEED + bubble_x_speed
+        if axis == 0:
+            bubble_spot = cur_bubble.rect.centerx
+        else:
+            bubble_spot = cur_bubble.rect.centery
+        bubble_axis_speed = abs(cur_bubble.speed[axis])
+        dist_from_bubble = abs(player_x - bubble_spot)
+        if axis == 0:
+            total_speed = PLAYER_SPEED + bubble_axis_speed
+        else:
+            # TODO: it's for addmissable
+            total_speed = max(bubble_axis_speed + 2 * np.sqrt(dist_from_bubble), 1)
         time_from_bubble = dist_from_bubble / total_speed
 
         if time_from_bubble < time_from_closest_bubble:
@@ -71,10 +92,16 @@ def time_from_closest_bubble_at_x_axis(game, player_index = 0):
             closest_bubble = cur_bubble
     for i in range(1, len(game.hexagons)):
         cur_bubble = game.hexagons[i]
-        bubble_x = cur_bubble.rect.centerx
-        bubble_x_speed = abs(cur_bubble.speed[0])
-        dist_from_bubble = abs(player_x - bubble_x)
-        total_speed = PLAYER_SPEED + bubble_x_speed
+        if axis == 0:
+            bubble_spot = cur_bubble.rect.centerx
+        else:
+            bubble_spot = cur_bubble.rect.centery
+        bubble_axis_speed = abs(cur_bubble.speed[axis])
+        dist_from_bubble = abs(player_x - bubble_spot)
+        if axis == 0:
+            total_speed = PLAYER_SPEED + bubble_axis_speed
+        else:
+            total_speed = bubble_axis_speed
         time_from_bubble = dist_from_bubble / total_speed
 
         if time_from_bubble < time_from_closest_bubble:
@@ -86,11 +113,14 @@ def time_from_closest_bubble_at_x_axis(game, player_index = 0):
 def stay_in_ball_area_but_not_too_close_heuristic(game):
     if not game.balls and not game.hexagons:
         return - BLOW_UP_BALL_SCORE
-    TOO_CLOSE_DIST = 10
-    time_to_collide = time_from_closest_bubble_at_x_axis(game)[1]
-    if time_to_collide < TOO_CLOSE_DIST:
-        return (TOO_CLOSE_DIST-time_to_collide) * 1000
-    return time_to_collide
+    TOO_CLOSE_X_DIST = 10
+    TOO_CLOSE_Y_DIST = 10
+    time_to_collide_at_x = time_from_closest_bubble_at_x_axis(game, axis=0)[1]
+    # TODO: unaddmissable if we use y axis (because we have to calculate gravity)
+    time_to_collide_at_y = time_from_closest_bubble_at_x_axis(game, axis=1)[1]
+    if time_to_collide_at_x < TOO_CLOSE_X_DIST and time_to_collide_at_y < TOO_CLOSE_Y_DIST:
+        return (max(TOO_CLOSE_X_DIST-time_to_collide_at_x, TOO_CLOSE_Y_DIST-time_to_collide_at_y)) * 1000
+    return time_to_collide_at_x
 
 def player_bonus_and_ball_heuristic(game):
     if not game.balls and not game.hexagons:

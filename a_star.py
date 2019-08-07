@@ -38,7 +38,7 @@ def a_star(start, is_goal, heuristic, g_function):
             came_from[child_node] = [current, child_action]
             child_node.update_f_score(g + h)
     # TODO check if we get here (only if no goal found)
-    return
+    return [], 0
 
 
 def reconstruct_path(came_from, current):
