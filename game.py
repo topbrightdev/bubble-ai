@@ -44,8 +44,6 @@ class Game:
                 self.max_level_available = 1
 
     def __lt__(self, other):
-        # TODO implement better
-        return self.get_f_score() < other.get_f_score()
         if bool(random.getrandbits(1)):
             return self.get_f_score() < other.get_f_score()
         else:
@@ -86,7 +84,7 @@ class Game:
         self.score += to_add
 
     def get_score(self):
-        return self.score
+        return int(self.score)
 
     def update_f_score(self, value):
         self.f_score = value
@@ -242,18 +240,18 @@ class Game:
             self.level_completed = True
             if self.level == self.max_level:
                 self.is_completed = True
-        self.tick_second()
+        self.tick_time_unit()
 
         return self
 
-    def tick_second(self):
-        self.time_left -= 0.1
+    def tick_time_unit(self):
+        self.time_left -= TIME_UNIT
         if self.time_left <= 0:
             for player in self.players:
                 self._decrease_lives(player)
 
     def get_time_left(self):
-        return np.ceil(self.time_left)
+        return int(np.ceil(self.time_left))
 
     def deep_copy_game(self): # TODO check if ok
         game_copy = Game(level=self.level)
