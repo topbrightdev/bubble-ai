@@ -44,8 +44,6 @@ class Game:
                 self.max_level_available = 1
 
     def __lt__(self, other):
-        # TODO implement better
-        return self.get_f_score() < other.get_f_score()
         if bool(random.getrandbits(1)):
             return self.get_f_score() < other.get_f_score()
         else:
