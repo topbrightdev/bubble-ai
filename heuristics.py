@@ -45,7 +45,7 @@ def time_from_closest_bubble_at_x_axis(game, player_index = 0):
     if len(game.balls) != 0:
         cur_bubble = game.balls[0]
         bubble_x = cur_bubble.rect.centerx
-        bubble_x_speed = cur_bubble.speed[0]
+        bubble_x_speed = abs(cur_bubble.speed[0])
         dist_from_bubble = abs(player_x - bubble_x)
         total_speed = PLAYER_SPEED + bubble_x_speed
         time_from_closest_bubble = dist_from_bubble / total_speed
@@ -53,7 +53,7 @@ def time_from_closest_bubble_at_x_axis(game, player_index = 0):
     else:
         cur_bubble = game.hexagons[0]
         bubble_x = cur_bubble.rect.centerx
-        bubble_x_speed = cur_bubble.speed[0]
+        bubble_x_speed = abs(cur_bubble.speed[0])
         dist_from_bubble = abs(player_x - bubble_x)
         total_speed = PLAYER_SPEED + bubble_x_speed
         time_from_closest_bubble = dist_from_bubble / total_speed
@@ -61,7 +61,7 @@ def time_from_closest_bubble_at_x_axis(game, player_index = 0):
     for i in range(1, len(game.balls)):
         cur_bubble = game.balls[i]
         bubble_x = cur_bubble.rect.centerx
-        bubble_x_speed = cur_bubble.speed[0]
+        bubble_x_speed = abs(cur_bubble.speed[0])
         dist_from_bubble = abs(player_x - bubble_x)
         total_speed = PLAYER_SPEED + bubble_x_speed
         time_from_bubble = dist_from_bubble / total_speed
@@ -72,7 +72,7 @@ def time_from_closest_bubble_at_x_axis(game, player_index = 0):
     for i in range(1, len(game.hexagons)):
         cur_bubble = game.hexagons[i]
         bubble_x = cur_bubble.rect.centerx
-        bubble_x_speed = cur_bubble.speed[0]
+        bubble_x_speed = abs(cur_bubble.speed[0])
         dist_from_bubble = abs(player_x - bubble_x)
         total_speed = PLAYER_SPEED + bubble_x_speed
         time_from_bubble = dist_from_bubble / total_speed
