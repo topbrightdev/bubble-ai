@@ -37,8 +37,8 @@ def start_level(level, game, font, clock, screen, main_menu, load_level_menu):
     while game.is_running:
         game.update()
         draw_world(game, font, clock, screen, main_menu, load_level_menu)
-        handle_game_event(game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
+        handle_game_event(game, font, clock, screen, main_menu, load_level_menu)
         if game.is_completed or game.game_over or \
                 game.level_completed or game.is_restarted:
             pygame.time.delay(3000)
