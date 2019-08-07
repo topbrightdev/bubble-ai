@@ -25,7 +25,7 @@ def a_star(start, is_goal, heuristic, g_function):
             #     if child_node.check_if_equal(node):
             #         continue
 
-            g = g_function(child_node)
+            g = g_function(child_node, start)
             h = heuristic(child_node)
             if child_node not in fringe_heap:
                 heapq.heappush(fringe_heap, child_node)

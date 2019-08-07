@@ -2,6 +2,10 @@ import math
 from settings import *
 import numpy as np
 
+DANGER_DIST_FROM_BUBBLE = 80
+DANGER_X_DIST_FROM_BUBBLE = 50
+DANGER_TIME_FROM_BUBBLE = 10
+
 
 def distance_from_weapon_and_ball(game):
     if game.players[0].weapon.is_active:
@@ -158,54 +162,55 @@ def pick_up_bonuses(game):
 
 def stay_in_ball_area_but_not_too_close_heuristic(game):
     if not game.balls and not game.hexagons:
-        return - BLOW_UP_BALL_SCORE
-    TOO_CLOSE_X_DIST = 10
-    TOO_CLOSE_Y_DIST = 10
+        return 0
+    TOO_CLOSE_X_DIST = DANGER_TIME_FROM_BUBBLE
+    TOO_CLOSE_Y_DIST = DANGER_TIME_FROM_BUBBLE
     closest_ball_at_x, time_to_collide_at_x = time_from_closest_bubble_at_axis(game, axis=0)
     if time_to_collide_at_x < TOO_CLOSE_X_DIST:
         time_to_collide_at_y = time_from_bubble_and_player(game, closest_ball_at_x, axis=1, player_index=0)
         if time_to_collide_at_y < TOO_CLOSE_Y_DIST:
             return (max(TOO_CLOSE_X_DIST-time_to_collide_at_x, TOO_CLOSE_Y_DIST-time_to_collide_at_y)) * 1000
-    return time_to_collide_at_x
+    return time_to_collide_at_x * 5 # TODO change the 5
 
 
 def stay_in_ball_area_but_not_too_close_no_admissible_x_axis_heuristic(game):
     if not game.balls and not game.hexagons:
-        return - BLOW_UP_BALL_SCORE
+        return 0
     agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
-    if agent_dist < 50:
-        return (50 - agent_dist) * 1000
+    if agent_dist < DANGER_X_DIST_FROM_BUBBLE:
+        return (DANGER_X_DIST_FROM_BUBBLE - agent_dist) * 1000
     return agent_dist
 
 
 def player_bonus_and_ball_heuristic(game):
     if not game.balls and not game.hexagons:
-        return - 50
+        return 0
     agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
-    if agent_dist < 50:
-        return (50-agent_dist) * 1000
+    if agent_dist < DANGER_X_DIST_FROM_BUBBLE:
+        return (DANGER_X_DIST_FROM_BUBBLE-agent_dist) * 1000
     dist_from_bonus = pick_up_bonuses(game)
     return min(dist_from_bonus, agent_dist)
 
 
 def stay_in_center_heuristic(game):
     if not game.balls and not game.hexagons:
-        return - BLOW_UP_BALL_SCORE
+        return 0
     x_center = WINDOWWIDTH // 2
     agent_dist = find_the_distance_from_the_closest_ball(game)[1]
-    if agent_dist < 80:
-        return (80 - agent_dist) * 1000
+    if agent_dist < DANGER_DIST_FROM_BUBBLE:
+        return (DANGER_DIST_FROM_BUBBLE - agent_dist) * 1000
     return abs(game.players[0].rect.centerx - x_center)
 
 
 def shoot_on_small_balls_heuristic(game):
     if not game.balls and not game.hexagons:
-        return - BLOW_UP_BALL_SCORE
+        return 0
     agent_dist_from_smallest_ball = find_the_distance_from_the_closest_smallest_ball(game)[1]
     agent_dist_from_closest_ball = find_the_distance_from_the_closest_ball(game)[1]
-    if agent_dist_from_closest_ball < 80:
-        return (80 - agent_dist_from_closest_ball) * 1000
+    if agent_dist_from_closest_ball < DANGER_DIST_FROM_BUBBLE:
+        return (DANGER_DIST_FROM_BUBBLE - agent_dist_from_closest_ball) * 1000
     return agent_dist_from_smallest_ball
+
 
 # TODO if we want....
 def shoot_heuristic(game, starting_score, path_size):
