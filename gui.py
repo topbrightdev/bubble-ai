@@ -165,16 +165,16 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
         draw_message('Game over!', RED, game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
         pygame.time.delay(3000)
-        start_main_menu(game, font, clock, screen, main_menu, load_level_menu)
+        start_main_menu(Game(), font, clock, screen, main_menu, load_level_menu)
     if game.is_completed:
         draw_message('Congratulations! You won!!!', PURPLE, game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
         pygame.time.delay(3000)
-        start_main_menu(game, font, clock, screen, main_menu, load_level_menu)
+        start_main_menu(Game(), font, clock, screen, main_menu, load_level_menu)
     if game.level_completed and not game.is_completed:
-        draw_message('Well done! Level completed!', BLUE, game, font, clock, screen, main_menu, load_level_menu)
+        draw_message('Well done! Level completed!', BLUE, Game(), font, clock, screen, main_menu, load_level_menu)
     if game.is_restarted:
-        draw_message('Get ready!', BLUE, game, font, clock, screen, main_menu, load_level_menu)
+        draw_message('Get ready!', BLUE, Game(), font, clock, screen, main_menu, load_level_menu)
 
 
 
