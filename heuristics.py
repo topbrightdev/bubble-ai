@@ -67,6 +67,41 @@ def find_the_distance_from_the_closest_ball(game, index = 0):
             closest_ball = cur_ball
     return closest_ball, distance_from_closest_ball
 
+def find_the_distance_from_the_closest_smallest_ball(game):
+    if len(game.balls) != 0:
+        distance_from_closest_smallest_ball = distance_between_ball_and_player(game.balls[0], game)
+        closest_smallest_ball = game.balls[0]
+        size = game.balls[0].size
+    else:
+        distance_from_closest_smallest_ball = distance_between_ball_and_player(game.hexagons[0], game)
+        closest_smallest_ball = game.hexagons[0]
+        size = game.hexagons[0].size
+    for i in range(1, len(game.balls)):
+        cur_ball = game.balls[i]
+        cur_size = game.balls[i].size
+        cur_dist = distance_between_ball_and_player(cur_ball, game)
+        if cur_dist < distance_from_closest_smallest_ball and cur_size <= size:
+            distance_from_closest_smallest_ball = cur_dist
+            closest_smallest_ball = cur_ball
+            size = cur_size
+        elif cur_size < size:
+            distance_from_closest_smallest_ball = cur_dist
+            closest_smallest_ball = cur_ball
+            size = cur_size
+    for i in range(len(game.hexagons)):
+        cur_ball = game.hexagons[i]
+        cur_size = game.hexagons[i].size
+        cur_dist = distance_between_ball_and_player(cur_ball, game)
+        if cur_dist < distance_from_closest_smallest_ball and cur_size <= size:
+            distance_from_closest_smallest_ball = cur_dist
+            closest_smallest_ball = cur_ball
+            size = cur_size
+        elif cur_size < size:
+            distance_from_closest_smallest_ball = cur_dist
+            closest_smallest_ball = cur_ball
+            size = cur_size
+    return closest_smallest_ball, distance_from_closest_smallest_ball
+
 
 def time_from_bubble_and_player(game, bubble, axis=0, player_index=0):
     if axis == 0:
@@ -110,6 +145,17 @@ def time_from_closest_bubble_at_axis(game, axis=0, player_index=0):
     return closest_bubble, time_from_closest_bubble
 
 
+def pick_up_bonuses(game):
+    distance_from_closest_bonus = WINDOWWIDTH + 1
+    if len(game.bonuses) == 0:
+        return distance_from_closest_bonus
+    for bonus in game.bonuses:
+        distance_from_bonus = distance_between_bonus_and_player(bonus, game)
+        if distance_from_bonus < distance_from_closest_bonus:
+            distance_from_closest_bonus = distance_from_bonus
+    return distance_from_closest_bonus
+
+
 def stay_in_ball_area_but_not_too_close_heuristic(game):
     if not game.balls and not game.hexagons:
         return - BLOW_UP_BALL_SCORE
@@ -138,7 +184,7 @@ def player_bonus_and_ball_heuristic(game):
     agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
     if agent_dist < 50:
         return (50-agent_dist) * 1000
-    dist_from_bonus = pick_up_bonuses_heuristic(game)
+    dist_from_bonus = pick_up_bonuses(game)
     return min(dist_from_bonus, agent_dist)
 
 
@@ -155,12 +201,13 @@ def stay_in_center_heuristic(game):
 def shoot_on_small_balls_heuristic(game):
     if not game.balls and not game.hexagons:
         return - BLOW_UP_BALL_SCORE
-    closest_ball, agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)
-    if agent_dist < 50:
-        return (50 - agent_dist) * 1000
-    return agent_dist / (100*(5 - closest_ball.size))
+    agent_dist_from_smallest_ball = find_the_distance_from_the_closest_smallest_ball(game)[1]
+    agent_dist_from_closest_ball = find_the_distance_from_the_closest_ball(game)[1]
+    if agent_dist_from_closest_ball < 80:
+        return (80 - agent_dist_from_closest_ball) * 1000
+    return agent_dist_from_smallest_ball
 
-
+# TODO if we want....
 def shoot_heuristic(game, starting_score, path_size):
     if len(game.balls) == 0 and len(game.hexagons) == 0:
         return 0
@@ -170,17 +217,6 @@ def shoot_heuristic(game, starting_score, path_size):
     elif distance_from_closest_ball >= 70 and game.players[0].weapon.is_active:
         return distance_from_closest_ball
     return 0
-
-
-def pick_up_bonuses_heuristic(game):
-    distance_from_closest_bonus = WINDOWWIDTH + 1
-    if len(game.bonuses) == 0:
-        return distance_from_closest_bonus
-    for bonus in game.bonuses:
-        distance_from_bonus = distance_between_bonus_and_player(bonus, game)
-        if distance_from_bonus < distance_from_closest_bonus:
-            distance_from_closest_bonus = distance_from_bonus
-    return distance_from_closest_bonus
 
 
 def zero_heuristic(game):
