@@ -163,15 +163,20 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
     draw_timer(game, font, clock, screen, main_menu, load_level_menu)
     draw_score(game, font, clock, screen, main_menu, load_level_menu)
     if game.game_over:
-        print("number of open nodes: %s" % total_open_nodes)
         draw_message('Game over!', RED, game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
         pygame.time.delay(3000)
+        print('cur level is: ', str(game.level))
+        print("number of open nodes: %s" % total_open_nodes)
+        print('time left: ',str(game.get_time_left()))
         start_main_menu(Game(), font, clock, screen, main_menu, load_level_menu)
     if game.is_completed:
         draw_message('Congratulations! You won!!!', PURPLE, game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
         pygame.time.delay(3000)
+        print('cur level is: ', str(game.level))
+        print("number of open nodes: %s" % total_open_nodes)
+        print('time left: ', str(game.get_time_left()))
         start_main_menu(Game(), font, clock, screen, main_menu, load_level_menu)
     if game.level_completed and not game.is_completed:
         draw_message('Well done! Level completed!', BLUE, Game(), font, clock, screen, main_menu, load_level_menu)
