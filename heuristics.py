@@ -5,7 +5,7 @@ import numpy as np
 
 
 DANGER_DIST_FROM_BUBBLE = 80
-DANGER_X_DIST_FROM_BUBBLE = 50
+DANGER_X_DIST_FROM_BUBBLE = 40
 DANGER_TIME_FROM_BUBBLE = 10
 
 # Helper functions
@@ -174,7 +174,7 @@ def pick_up_bonuses(game):
     return distance_from_closest_bonus
 
 
-def stay_in_ball_area_but_not_too_close_heuristic(game, start):
+def stay_in_ball_area_but_not_too_close_heuristic_time_admissible(game, start):
     if not game.balls and not game.hexagons:
         return 0
     TOO_CLOSE_X_DIST = DANGER_TIME_FROM_BUBBLE
@@ -186,10 +186,10 @@ def stay_in_ball_area_but_not_too_close_heuristic(game, start):
             return (max(TOO_CLOSE_X_DIST-time_to_collide_at_x, TOO_CLOSE_Y_DIST-time_to_collide_at_y)) * 1000
     elif is_sub_goal_score_or_steps(game, start):
         return 0
-    return time_to_collide_at_x * 5 # TODO change the 5
+    return time_to_collide_at_x *5  # TODO change the 5
 
 
-def stay_in_ball_area_but_not_too_close_no_admissible_x_axis_heuristic(game, start):
+def stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic(game, start):
     if not game.balls and not game.hexagons:
         return 0
     agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
@@ -200,13 +200,12 @@ def stay_in_ball_area_but_not_too_close_no_admissible_x_axis_heuristic(game, sta
     return agent_dist
 
 
-def stay_in_ball_area_but_not_too_close_no_admissible_x_axis_danger_both_axis_heuristic(game, start):
+def stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic(game, start):
     if not game.balls and not game.hexagons:
         return 0
-    close_bubble, agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)
-    if agent_dist < DANGER_X_DIST_FROM_BUBBLE:
-        if dist_from_bubble_and_player(close_bubble, game.players[0], axis=1):
-            return (DANGER_X_DIST_FROM_BUBBLE - agent_dist) * 1000
+    close_bubble, agent_dist = find_the_distance_from_the_closest_ball(game)
+    if agent_dist < DANGER_DIST_FROM_BUBBLE:
+            return (DANGER_DIST_FROM_BUBBLE - agent_dist) * 1000
     elif is_sub_goal_score_or_steps(game, start):
         return 0
     return agent_dist
