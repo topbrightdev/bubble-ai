@@ -216,15 +216,16 @@ class Game:
                           bonus_type)
             self.bonuses.append(bonus)
 
-    def update(self):
+    def update(self, is_a_star=False):
         if self.level_completed:
             self.add_to_score(TIME_LEFT_SCORE_FACTOR * self.get_time_left())
         if self.level_completed and not self.is_completed:
             self.load_level(self.level + 1)
         if self.game_over:
             self.is_running = False
-            pygame.quit()
-            sys.exit()
+            if not is_a_star:
+                pygame.quit()
+                sys.exit()
         if self.dead_player:
             self._restart()
         self._check_for_collisions()
@@ -298,30 +299,31 @@ class Game:
         if action == MOVE_LEFT:
             self.players[0].moving_left = True
             for i in range(LOOP_AT_EACH_MOVE_UPDATE):
+                self.update(is_a_star=True)
                 if self.dead_player or not self.players[0].is_alive:
                     break
-                self.update()
             self.players[0].moving_left = False
             if self.dead_player or  not self.players[0].is_alive:
                 return
         elif action == MOVE_RIGHT:
             self.players[0].moving_right = True
             for i in range(LOOP_AT_EACH_MOVE_UPDATE):
+                self.update(is_a_star=True)
                 if self.dead_player or not self.players[0].is_alive:
                     break
-                self.update()
             self.players[0].moving_right = False
             if self.dead_player or not self.players[0].is_alive:
                 return
         elif action == SHOOT:
             if self.dead_player or not self.players[0].is_alive:
+                self.update(is_a_star=True)
                 return
             if not self.players[0].weapon.is_active:
                 self.players[0].shoot()
             for i in range(LOOP_AT_EACH_MOVE_UPDATE):
+                self.update(is_a_star=True)
                 if self.dead_player or not self.players[0].is_alive:
                     break
-                self.update()
             if self.dead_player or not self.players[0].is_alive:
                 return
 
