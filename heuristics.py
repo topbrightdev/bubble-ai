@@ -6,7 +6,7 @@ import numpy as np
 
 DANGER_DIST_FROM_BUBBLE = 80
 DANGER_X_DIST_FROM_BUBBLE = 40
-DANGER_TIME_FROM_BUBBLE = 10
+DANGER_TIME_FROM_BUBBLE = 8
 
 # Helper functions
 
@@ -139,6 +139,18 @@ def euclidean_dist_bubble_and_player(bubble, player):
     return math.sqrt(math.pow(dist_from_bubble_and_player(bubble, player, 0),2) + math.pow(dist_from_bubble_and_player(bubble, player, 1),2))
 
 
+def get_time_to_closest_bubble(game, player_index=0):
+    closest_bubble = None
+    dist_from_closest_bubble = None
+    for cur_bubble in game.balls + game.hexagons:
+        cur_bubble_dist = euclidean_dist_bubble_and_player(cur_bubble, game.players[player_index])
+        if not closest_bubble or cur_bubble_dist < dist_from_closest_bubble:
+            closest_bubble = cur_bubble
+            dist_from_closest_bubble = cur_bubble_dist
+    return max(time_from_bubble_and_player(game, closest_bubble, 0, player_index),
+               time_from_bubble_and_player(game, closest_bubble, 1, player_index))
+
+
 def time_from_closest_bubble_at_axis(game, axis=0, player_index=0):
     if len(game.balls) != 0:
         cur_bubble = game.balls[0]
@@ -177,19 +189,18 @@ def pick_up_bonuses(game):
     return distance_from_closest_bonus
 
 
+# heuristics:
+
+
 def stay_in_ball_area_but_not_too_close_heuristic_time_admissible(game, start):
     if not game.balls and not game.hexagons:
         return 0
-    TOO_CLOSE_X_DIST = DANGER_TIME_FROM_BUBBLE
-    TOO_CLOSE_Y_DIST = DANGER_TIME_FROM_BUBBLE
-    closest_ball_at_x, time_to_collide_at_x = time_from_closest_bubble_at_axis(game, axis=0)
-    if time_to_collide_at_x < TOO_CLOSE_X_DIST:
-        time_to_collide_at_y = time_from_bubble_and_player(game, closest_ball_at_x, axis=1, player_index=0)
-        if time_to_collide_at_y < TOO_CLOSE_Y_DIST:
-            return (max(TOO_CLOSE_X_DIST-time_to_collide_at_x, TOO_CLOSE_Y_DIST-time_to_collide_at_y)) * 1000
+    time_to_closest_bubble = get_time_to_closest_bubble(game)
+    if time_to_closest_bubble < DANGER_TIME_FROM_BUBBLE:
+            return (DANGER_TIME_FROM_BUBBLE-time_to_closest_bubble) * 1000
     elif is_sub_goal_score_or_steps(game, start):
         return 0
-    return time_to_collide_at_x *5  # TODO change the 5
+    return time_to_closest_bubble * 5
 
 
 def stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic(game, start):
