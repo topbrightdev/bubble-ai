@@ -228,7 +228,6 @@ class Game:
     def update(self, is_a_star=False):
         if self.level_completed or self.is_completed:
             self.add_to_score(TIME_LEFT_SCORE_FACTOR * self.get_time_left())
-            print('score is: ', str(self.get_score()))
         if self.level_completed and not self.is_completed:
             self.load_level(self.level + 1)
         if self.game_over:

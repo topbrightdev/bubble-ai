@@ -15,7 +15,7 @@ def handle_ai_game_event(game, font, clock, screen, main_menu, load_level_menu):
     open_nodes = 0
     if (ai_spot_counter // LOOP_AT_EACH_MOVE_UPDATE >= ai_path_size):
         ai_path, ai_path_size, open_nodes = a_star(start=game, is_goal=is_sub_goal_steps_score_bonuses,
-                                       heuristic=player_bonus_and_ball_heuristic,
+                                       heuristic=stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic,
                                        g_function=g_function_by_steps)
         if ai_path_size > REAL_PATH_LEN:
             ai_path = ai_path[0:REAL_PATH_LEN]

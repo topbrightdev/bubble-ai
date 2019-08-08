@@ -168,7 +168,10 @@ def pick_up_bonuses(game):
     if len(game.bonuses) == 0:
         return distance_from_closest_bonus
     for bonus in game.bonuses:
-        distance_from_bonus = distance_between_bonus_and_player(bonus, game)
+        if bonus.rect.centery > 20:
+            distance_from_closest_bonus = WINDOWWIDTH + 1
+        else:
+            distance_from_bonus = distance_between_bonus_and_player(bonus, game)
         if distance_from_bonus < distance_from_closest_bonus:
             distance_from_closest_bonus = distance_from_bonus
     return distance_from_closest_bonus
