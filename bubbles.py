@@ -38,7 +38,7 @@ class Bubble(pygame.sprite.Sprite):
 
 class Ball(Bubble):
     def __init__(self, x, y, size, speed):
-        Bubble.__init__(self, x, y, size, speed, 'ball.png')
+        Bubble.__init__(self, x, y, size, speed, BALL_IMAGE_NAME)
 
     def update(self):
         self.speed[1] += GRAVITY
@@ -51,7 +51,7 @@ class Ball(Bubble):
 
 class Hexagon(Bubble):
     def __init__(self, x, y, size, speed):
-        Bubble.__init__(self, x, y, size, speed, 'hexagon.png')
+        Bubble.__init__(self, x, y, size, speed, HEXAGON_IMAGE_NAME)
 
     def deep_copy_bubble(self):
         speed = copy.deepcopy(self.speed)
