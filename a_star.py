@@ -29,7 +29,7 @@ def a_star(start, is_goal, heuristic, g_function):
             #         continue
 
             g = g_function(child_node, start)
-            h = heuristic(child_node)
+            h = heuristic(child_node, start)
             if child_node not in fringe_heap:
                 heapq.heappush(fringe_heap, child_node)
                 # TODO we need to check if we get the same state from two or more other ways?
