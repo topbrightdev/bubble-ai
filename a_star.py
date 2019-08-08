@@ -46,7 +46,7 @@ def a_star(start, is_goal, heuristic, g_function):
 def reconstruct_path(came_from, current):
     total_path = []
     while current in came_from.keys():
-        # add the action that get from previous to current, and insert to the start of the list
+        # add the action that get from previous to the current node, and insert to the start of the list
         total_path.insert(0, came_from[current][1])
         current = came_from[current][0]
     return total_path, len(total_path)
