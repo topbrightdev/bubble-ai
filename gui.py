@@ -194,7 +194,7 @@ def handle_game_event(game, font, clock, screen, main_menu, load_level_menu):
         total_open_nodes += open_nodes
         for event in pygame.event.get():
             # TODO maybe dont need quit option
-            if (event.type == KEYDOWN and event.key == K_ESCAPE) or event.key == K_ESCAPE:
+            if event.type == KEYDOWN and event.key == K_ESCAPE:
                 quit_game(game, font, clock, screen, main_menu, load_level_menu)
     else:
         for event in pygame.event.get():

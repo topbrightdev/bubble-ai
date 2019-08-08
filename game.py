@@ -284,8 +284,6 @@ class Game:
 
         # copy fields
         game_copy.score = self.score
-        game_copy.g_score = self.g_score
-        game_copy.f_score = self.f_score
         game_copy.game_over = self.game_over
         game_copy.level_completed = self.level_completed
         game_copy.is_running = self.is_running
