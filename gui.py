@@ -170,7 +170,7 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
         print("number of open nodes: %s" % total_open_nodes)
         print('time left: ',str(game.get_time_left()))
         print('lost!')
-    start_main_menu(Game(), font, clock, screen, main_menu, load_level_menu)
+        start_main_menu(Game(), font, clock, screen, main_menu, load_level_menu)
     if game.is_completed:
         draw_message('Congratulations! You won!!!', PURPLE, game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
