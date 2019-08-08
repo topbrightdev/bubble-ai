@@ -17,8 +17,8 @@ class Game:
 
     def __init__(self, level=1):
         self.score = 0
-        self.g_score = 0
-        self.f_score = 0
+        self.g_score = np.inf
+        self.h_score = np.inf
         self.balls = []
         self.hexagons = []
         self.players = [Player()]
@@ -86,11 +86,20 @@ class Game:
     def get_score(self):
         return int(self.score)
 
-    def update_f_score(self, value):
-        self.f_score = value
+    def update_g_score(self, value):
+        self.g_score = value
+
+    def get_g_score(self):
+        return self.g_score
+
+    def update_h_score(self, value):
+        self.h_score = value
+
+    def get_h_score(self):
+        return self.h_score
 
     def get_f_score(self):
-        return self.f_score
+        return self.get_g_score() + self.get_h_score()
 
     def load_level(self, level):
         self.is_restarted = True
