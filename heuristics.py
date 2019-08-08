@@ -221,7 +221,7 @@ def player_bonus_and_ball_heuristic(game, start):
     elif is_sub_goal_score_or_steps(game, start):
         return 0
     dist_from_bonus = pick_up_bonuses(game)
-    return min(dist_from_bonus, agent_dist)
+    return min(dist_from_bonus / 5, agent_dist / 5)
 
 
 def stay_in_center_heuristic(game, start):
