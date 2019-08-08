@@ -28,7 +28,7 @@ class Game:
         self.level_completed = False
         self.is_running = True
         self.is_completed = False
-        self.max_level = MAX_LEVEL # TODO change if we want to add levels
+        self.max_level = MAX_LEVEL
         self.is_multiplayer = False
         self.is_ai = False
         self.is_nn = False
@@ -264,21 +264,20 @@ class Game:
     def get_time_left(self):
         return int(np.ceil(self.time_left))
 
-    def deep_copy_game(self): # TODO check if ok
+    def deep_copy_game(self):
         game_copy = Game(level=self.level)
 
-        # TODO check if deep working
         game_copy.balls = []
         for ball in self.balls:
             game_copy.balls.append(ball.deep_copy_bubble())
         game_copy.hexagons = []
         for hexagon in self.hexagons:
             game_copy.hexagons.append(hexagon.deep_copy_bubble())
-        # TODO
+
         game_copy.players = []
         for player in self.players:
             game_copy.players.append(player.deep_copy_player())
-        #TODO
+
         game_copy.bonuses = []
         for bonus in self.bonuses:
             game_copy.bonuses.append(bonus.deep_copy_bonus())
@@ -338,7 +337,6 @@ class Game:
                 return
 
     def get_successors(self):
-        # TODO maybe update X times faster (by increase speed, at astar)
         successors_list = []
         for action in A_STAR_ACTION_LIST:
             successor = self.deep_copy_game()
@@ -348,6 +346,7 @@ class Game:
         return successors_list
 
     def get_represented_state(self):
+        # TODO NN func
         # (ball1x, ball1y, ball1size, ball1dir, ball2x, ball2y, ball2size, ball2dir, ..., p1x, isshot)
         cur_state = []
         cur_player_x = self.players[AI_PLAYER_NUM].rect.centerx
@@ -388,6 +387,7 @@ class Game:
         return cur_state
 
     def get_x_closest_bubbles(self, x):
+        # TODO NN func
         closest_x_balls = []
         all_balls_list = []
         for ball in self.balls:

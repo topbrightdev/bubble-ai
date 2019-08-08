@@ -38,17 +38,15 @@ def is_sub_goal_by_score(game, start):
 def is_sub_goal_score_or_steps(game, start):
     return is_sub_goal_by_score(game, start) or is_sub_goal_by_steps(game, start)
 
+
 def is_sub_goal_by_blow_up_ball(game, start):
     return calc_worth_of_balls(game) < calc_worth_of_balls(start)
 
 
 def is_sub_goal_by_steps(game, start):
     # print(start.time_left - game.time_left)
-    return start.time_left - game.time_left >= 0.7
+    return start.time_left - game.time_left >= MAX_PATH_SIZE * TIME_UNIT
 
-# TODO implement efficient
+
 def calc_worth_of_balls(game):
-    worth = 0
-    for ball in game.balls + game.hexagons:
-        worth += BALL_WORTH_BY_SIZE[ball.size]
-    return worth
+    return sum([BALL_WORTH_BY_SIZE[bubble.size] for bubble in game.balls + game.hexagons])
