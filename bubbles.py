@@ -25,7 +25,10 @@ class Bubble(pygame.sprite.Sprite):
         if self.rect.left < 0 or self.rect.right > WINDOWWIDTH:
             self.speed[0] = -self.speed[0]
         if self.rect.top < 0 or self.rect.bottom > WINDOWHEIGHT:
-            self.speed[1] = -self.speed[1]
+            if self.image_name == BALL_IMAGE_NAME:
+                self.speed[1] = - min(3 * (self.size+5), 27)
+            else:
+                self.speed[1] = -self.speed[1]
         self.rect.left = self._clip(self.rect.left, 0, WINDOWWIDTH)
         self.rect.right = self._clip(self.rect.right, 0, WINDOWWIDTH)
         self.rect.top = self._clip(self.rect.top, 0, WINDOWHEIGHT)

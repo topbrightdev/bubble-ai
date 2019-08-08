@@ -187,11 +187,11 @@ class Game:
         ball = self.balls[ball_index]
         if ball.size > 1:
             self.balls.append(Ball(
-                ball.rect.left - ball.size**2,
+                ball.rect.left + ball.size,
                 ball.rect.top - 10, ball.size - 1, [-3, -5])
             )
             self.balls.append(
-                Ball(ball.rect.left + ball.size**2,
+                Ball(ball.rect.right - ball.size,
                      ball.rect.top - 10, ball.size - 1, [3, -5])
             )
         del self.balls[ball_index]
@@ -204,10 +204,10 @@ class Game:
         hexagon = self.hexagons[hex_index]
         if hexagon.size > 1:
             self.hexagons.append(
-                Hexagon(hexagon.rect.left, hexagon.rect.centery,
+                Hexagon(hexagon.rect.left + hexagon.size, hexagon.rect.centery,
                         hexagon.size - 1, [-3, -5]))
             self.hexagons.append(
-                Hexagon(hexagon.rect.right, hexagon.rect.centery,
+                Hexagon(hexagon.rect.right - hexagon.size, hexagon.rect.centery,
                         hexagon.size - 1, [3, -5]))
         del self.hexagons[hex_index]
         bonus_type = self._drop_bonus()
