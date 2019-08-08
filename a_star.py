@@ -12,6 +12,7 @@ def a_star(start, is_goal, heuristic, g_function):
         open_nodes += 1
         if is_goal(current, start):
             path, path_size = reconstruct_path(came_from, current)
+            print(open_nodes)
             return path, path_size, open_nodes
 
         visited_set.add(current)
@@ -40,6 +41,7 @@ def a_star(start, is_goal, heuristic, g_function):
             came_from[child_node] = [current, child_action]
             child_node.update_f_score(g + h)
     # TODO check if we get here (only if no goal found)
+    print(open_nodes)
     return [], 0, open_nodes
 
 
