@@ -58,7 +58,7 @@ def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
             if cur_open_nodes != 0:
                 list_of_open_nodes.append(cur_open_nodes) # TODO
         else:
-            handle_game_event(game, font, clock, screen, main_menu, load_level_menu, heuristic) # TODO
+            handle_game_event(game, font, clock, screen, main_menu, load_level_menu, heuristic=heuristic, is_goal_func=is_goal_func) # TODO
         if game.is_completed or game.game_over or \
                 game.level_completed or game.is_restarted:
             pygame.time.delay(3000)
