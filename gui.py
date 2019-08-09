@@ -31,15 +31,34 @@ def init_gui():
     return game, font, clock, screen, main_menu, load_level_menu
 
 
-def start_level(level, game, font, clock, screen, main_menu, load_level_menu):
+def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
+                calc_stats=False,
+                heuristic=stay_in_ball_area_but_not_too_close_heuristic_time_admissible,
+                is_goal_func=is_sub_goal_steps_score_bonuses):
+    if calc_stats:
+        cur_level = level # TODO
+        list_of_open_nodes = []
     game.load_level(level)
     main_menu.is_active = False
     pygame.mouse.set_visible(False)
     while game.is_running:
         game.update()
+        if calc_stats:
+            if game.level_completed or game.is_completed: # TODO
+                print("------------------Finished level %s------------------" % cur_level) # TODO
+                cur_level += 1 # TODO
+            if game.is_completed or game.game_over:
+                final_score = game.get_score()
+                return list_of_open_nodes, cur_level, final_score
         draw_world(game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
-        handle_game_event(game, font, clock, screen, main_menu, load_level_menu)
+        if calc_stats:
+            cur_open_nodes = handle_game_event(game, font, clock, screen, main_menu, load_level_menu, heuristic,
+                                               calc_stats, is_goal_func) # TODO
+            if cur_open_nodes != 0:
+                list_of_open_nodes.append(cur_open_nodes) # TODO
+        else:
+            handle_game_event(game, font, clock, screen, main_menu, load_level_menu, heuristic) # TODO
         if game.is_completed or game.game_over or \
                 game.level_completed or game.is_restarted:
             pygame.time.delay(3000)
@@ -190,11 +209,14 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
 
 
 
-def handle_game_event(game, font, clock, screen, main_menu, load_level_menu):
+def handle_game_event(game, font, clock, screen, main_menu, load_level_menu, heuristic=None, calc_stats=False, is_goal_func=None):
     if game.is_ai and not game.is_nn:
         global total_open_nodes
-        open_nodes = handle_ai_game_event(game, font, clock, screen, main_menu, load_level_menu)
+        if heuristic is None:
+            raise ValueError("You Have to give heuristic if you want to use AI player")
+        open_nodes = handle_ai_game_event(game, font, clock, screen, main_menu, load_level_menu, heuristic, is_goal_func)
         total_open_nodes += open_nodes
+        return open_nodes
         # for event in pygame.event.get():
         #     # TODO maybe dont need quit option
         #     if event.type == KEYDOWN and event.key == K_ESCAPE:

@@ -35,17 +35,17 @@ def is_sub_goal_by_score(game, start):
     return game.get_score() > start.get_score() or game.level_completed
 
 
-def is_sub_goal_score_or_steps(game, start):
-    return is_sub_goal_by_score(game, start) or is_sub_goal_by_steps(game, start)
+def is_sub_goal_score_or_steps(game, start, steps=MAX_PATH_SIZE):
+    return is_sub_goal_by_score(game, start) or is_sub_goal_by_steps(game, start, steps=steps)
 
 
 def is_sub_goal_by_blow_up_ball(game, start):
     return calc_worth_of_balls(game) < calc_worth_of_balls(start)
 
 
-def is_sub_goal_by_steps(game, start):
+def is_sub_goal_by_steps(game, start, steps=MAX_PATH_SIZE):
     # print(start.time_left - game.time_left)
-    return start.time_left - game.time_left >= MAX_PATH_SIZE * TIME_UNIT
+    return start.time_left - game.time_left >= steps * TIME_UNIT
 
 
 def calc_worth_of_balls(game):

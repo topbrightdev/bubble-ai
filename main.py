@@ -6,6 +6,13 @@ def start_player_game():
     start_main_menu(game, font, clock, screen, main_menu, load_level_menu)
 
 
+## Create Data
+def run_ai_game_and_return_data(level, heuristic, is_goal_func):
+    game, font, clock, screen, main_menu, load_level_menu = init_gui()
+    game.is_ai = True
+    return start_level(level, game, font, clock, screen, main_menu, load_level_menu, heuristic=heuristic, calc_stats=True, is_goal_func=is_sub_goal_steps_score_bonuses)
+
+
 ## NN
 def start_nn_game(level):
     game, font, clock, screen, main_menu, load_level_menu = init_gui()
@@ -30,5 +37,4 @@ def start_nn_level(level, game, font, clock, screen, main_menu, load_level_menu)
 
 if __name__ == '__main__':
     start_player_game()
-
 

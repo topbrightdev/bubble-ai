@@ -273,5 +273,5 @@ def shoot_heuristic(game, starting_score, path_size):
     return 0
 
 
-def zero_heuristic(game):
+def zero_heuristic(game, start):
     return 0
