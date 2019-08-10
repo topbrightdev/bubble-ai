@@ -4,7 +4,7 @@ from a_star_utils import *
 import numpy as np
 
 
-DANGER_DIST_FROM_BUBBLE = 300
+DANGER_DIST_FROM_BUBBLE = 290
 DANGER_X_DIST_FROM_BUBBLE = 40
 DANGER_TIME_FROM_BUBBLE = 8
 
@@ -47,9 +47,9 @@ def stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic(game,
 def bonus_and_ball_but_not_too_close_heuristic(game, start):
     if not game.balls and not game.hexagons:
         return 0
-    agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
-    if agent_dist < DANGER_X_DIST_FROM_BUBBLE:
-        return (DANGER_X_DIST_FROM_BUBBLE-agent_dist) * 1000
+    agent_dist = find_the_distance_from_the_closest_ball(game)[1]
+    if agent_dist < DANGER_DIST_FROM_BUBBLE:
+        return (DANGER_DIST_FROM_BUBBLE-agent_dist) * 1000
     elif is_sub_goal_score_or_steps(game, start):
         return 0
     dist_from_bonus = pick_up_bonuses(game)
