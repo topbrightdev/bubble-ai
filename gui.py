@@ -33,7 +33,7 @@ def init_gui():
 
 def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
                 calc_stats=False,
-                heuristic=stay_in_ball_area_but_not_too_close_heuristic_time_admissible,
+                heuristic=stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic,
                 is_goal_func=is_sub_goal_steps_score_bonuses):
     if calc_stats:
         cur_level = level # TODO

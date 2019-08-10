@@ -62,8 +62,8 @@ def generate_data_from_csv(file_path):
 
 def create_heuristic_data(heuristic, file_path, is_goal_func, max_steps):
     STARTING_LEVEL = 1
-    cur_goal_func = lambda (x, y): is_goal_func(x, y, max_steps)
-    list_of_open_nodes, final_level, final_score = main.run_ai_game_and_return_data(STARTING_LEVEL, heuristic, is_goal_func)
+    cur_goal_func = lambda x, y: is_goal_func(x, y, max_steps)
+    list_of_open_nodes, final_level, final_score = main.run_ai_game_and_return_data(STARTING_LEVEL, heuristic, cur_goal_func)
     df = pd.DataFrame(list_of_open_nodes, columns=[OPEN_NODES_AXIS])
     df[FINAL_LEVEL_AXIS] = final_level
     df[FINAL_SCORE_AXIS] = final_score
