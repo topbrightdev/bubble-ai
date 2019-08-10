@@ -8,6 +8,93 @@ DANGER_DIST_FROM_BUBBLE = 80
 DANGER_X_DIST_FROM_BUBBLE = 40
 DANGER_TIME_FROM_BUBBLE = 8
 
+
+# heuristics:
+
+def stay_in_ball_area_but_not_too_close_heuristic_time_admissible(game, start):
+    if not game.balls and not game.hexagons:
+        return 0
+    time_to_closest_bubble = get_time_to_closest_bubble(game)
+    if time_to_closest_bubble < DANGER_TIME_FROM_BUBBLE:
+            return (DANGER_TIME_FROM_BUBBLE-time_to_closest_bubble) * 1000
+    elif is_sub_goal_score_or_steps(game, start):
+        return 0
+    return time_to_closest_bubble * 5
+
+
+def stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic(game, start):
+    if not game.balls and not game.hexagons:
+        return 0
+    agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
+    if agent_dist < DANGER_X_DIST_FROM_BUBBLE:
+        return (DANGER_X_DIST_FROM_BUBBLE - agent_dist) * 1000
+    elif is_sub_goal_score_or_steps(game, start):
+        return 0
+    return agent_dist
+
+
+def stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic(game, start):
+    if not game.balls and not game.hexagons:
+        return 0
+    close_bubble, agent_dist = find_the_distance_from_the_closest_ball(game)
+    if agent_dist < DANGER_DIST_FROM_BUBBLE:
+            return (DANGER_DIST_FROM_BUBBLE - agent_dist) * 1000
+    elif is_sub_goal_score_or_steps(game, start):
+        return 0
+    return agent_dist
+
+
+def bonus_and_ball_but_not_too_close_heuristic(game, start):
+    if not game.balls and not game.hexagons:
+        return 0
+    agent_dist = find_the_distance_from_the_closest_ball(game)[1]
+    if agent_dist < DANGER_X_DIST_FROM_BUBBLE:
+        return (DANGER_X_DIST_FROM_BUBBLE-agent_dist) * 1000
+    elif is_sub_goal_score_or_steps(game, start):
+        return 0
+    dist_from_bonus = pick_up_bonuses(game)
+    return min(dist_from_bonus, agent_dist)
+
+
+def stay_in_center_heuristic(game, start):
+    if not game.balls and not game.hexagons:
+        return 0
+    x_center = WINDOWWIDTH // 2
+    agent_dist = find_the_distance_from_the_closest_ball(game)[1]
+    if agent_dist < DANGER_DIST_FROM_BUBBLE:
+        return (DANGER_DIST_FROM_BUBBLE - agent_dist) * 1000
+    elif is_sub_goal_score_or_steps(game, start):
+        return 0
+    return abs(game.players[0].rect.centerx - x_center)
+
+
+def shoot_on_small_balls_heuristic(game, start):
+    if not game.balls and not game.hexagons:
+        return 0
+    agent_dist_from_smallest_ball = find_the_distance_from_the_closest_smallest_ball(game)[1]
+    agent_dist_from_closest_ball = find_the_distance_from_the_closest_ball(game)[1]
+    if agent_dist_from_closest_ball < DANGER_DIST_FROM_BUBBLE:
+        return (DANGER_DIST_FROM_BUBBLE - agent_dist_from_closest_ball) * 1000
+    elif is_sub_goal_score_or_steps(game, start):
+        return 0
+    return agent_dist_from_smallest_ball
+
+
+# TODO if we want....
+def shoot_heuristic(game, starting_score, path_size):
+    if len(game.balls) == 0 and len(game.hexagons) == 0:
+        return 0
+    ball, distance_from_closest_ball = find_the_distance_from_the_closest_ball_at_x_axis(game)
+    if distance_from_closest_ball < 70 and game.players[0].weapon.is_active:
+        return -(70-distance_from_closest_ball)
+    elif distance_from_closest_ball >= 70 and game.players[0].weapon.is_active:
+        return distance_from_closest_ball
+    return 0
+
+
+def zero_heuristic(game, start):
+    return 0
+
 # Helper functions
 
 def distance_from_weapon_and_ball(game):
@@ -188,90 +275,3 @@ def pick_up_bonuses(game):
             distance_from_closest_bonus = distance_from_bonus
     return distance_from_closest_bonus
 
-
-# heuristics:
-
-
-def stay_in_ball_area_but_not_too_close_heuristic_time_admissible(game, start):
-    if not game.balls and not game.hexagons:
-        return 0
-    time_to_closest_bubble = get_time_to_closest_bubble(game)
-    if time_to_closest_bubble < DANGER_TIME_FROM_BUBBLE:
-            return (DANGER_TIME_FROM_BUBBLE-time_to_closest_bubble) * 1000
-    elif is_sub_goal_score_or_steps(game, start):
-        return 0
-    return time_to_closest_bubble * 5
-
-
-def stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic(game, start):
-    if not game.balls and not game.hexagons:
-        return 0
-    agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
-    if agent_dist < DANGER_X_DIST_FROM_BUBBLE:
-        return (DANGER_X_DIST_FROM_BUBBLE - agent_dist) * 1000
-    elif is_sub_goal_score_or_steps(game, start):
-        return 0
-    return agent_dist
-
-
-def stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic(game, start):
-    if not game.balls and not game.hexagons:
-        return 0
-    close_bubble, agent_dist = find_the_distance_from_the_closest_ball(game)
-    if agent_dist < DANGER_DIST_FROM_BUBBLE:
-            return (DANGER_DIST_FROM_BUBBLE - agent_dist) * 1000
-    elif is_sub_goal_score_or_steps(game, start):
-        return 0
-    return agent_dist
-
-
-def player_bonus_and_ball_heuristic(game, start):
-    if not game.balls and not game.hexagons:
-        return 0
-    agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
-    if agent_dist < DANGER_X_DIST_FROM_BUBBLE:
-        return (DANGER_X_DIST_FROM_BUBBLE-agent_dist) * 1000
-    elif is_sub_goal_score_or_steps(game, start):
-        return 0
-    dist_from_bonus = pick_up_bonuses(game)
-    return min(dist_from_bonus / 5, agent_dist / 5)
-
-
-def stay_in_center_heuristic(game, start):
-    if not game.balls and not game.hexagons:
-        return 0
-    x_center = WINDOWWIDTH // 2
-    agent_dist = find_the_distance_from_the_closest_ball(game)[1]
-    if agent_dist < DANGER_DIST_FROM_BUBBLE:
-        return (DANGER_DIST_FROM_BUBBLE - agent_dist) * 1000
-    elif is_sub_goal_score_or_steps(game, start):
-        return 0
-    return abs(game.players[0].rect.centerx - x_center)
-
-
-def shoot_on_small_balls_heuristic(game, start):
-    if not game.balls and not game.hexagons:
-        return 0
-    agent_dist_from_smallest_ball = find_the_distance_from_the_closest_smallest_ball(game)[1]
-    agent_dist_from_closest_ball = find_the_distance_from_the_closest_ball(game)[1]
-    if agent_dist_from_closest_ball < DANGER_DIST_FROM_BUBBLE:
-        return (DANGER_DIST_FROM_BUBBLE - agent_dist_from_closest_ball) * 1000
-    elif is_sub_goal_score_or_steps(game, start):
-        return 0
-    return agent_dist_from_smallest_ball
-
-
-# TODO if we want....
-def shoot_heuristic(game, starting_score, path_size):
-    if len(game.balls) == 0 and len(game.hexagons) == 0:
-        return 0
-    ball, distance_from_closest_ball = find_the_distance_from_the_closest_ball_at_x_axis(game)
-    if distance_from_closest_ball < 70 and game.players[0].weapon.is_active:
-        return -(70-distance_from_closest_ball)
-    elif distance_from_closest_ball >= 70 and game.players[0].weapon.is_active:
-        return distance_from_closest_ball
-    return 0
-
-
-def zero_heuristic(game, start):
-    return 0
