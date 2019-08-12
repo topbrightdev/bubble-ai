@@ -59,12 +59,12 @@ def bonus_and_ball_but_not_too_close_heuristic(game, start):
 def stay_in_center_heuristic(game, start):
     if not game.balls and not game.hexagons:
         return 0
-    x_center = WINDOWWIDTH // 2
     agent_dist = find_the_distance_from_the_closest_ball(game)[1]
     if agent_dist < DANGER_DIST_FROM_BUBBLE:
         return (DANGER_DIST_FROM_BUBBLE - agent_dist) * 1000
     elif is_sub_goal_score_or_steps(game, start):
         return 0
+    x_center = WINDOWWIDTH // 2
     return abs(game.players[0].rect.centerx - x_center)
 
 
@@ -141,60 +141,21 @@ def distance_sign_between_ball_and_player(ball,game,index=0):
 
 
 def find_the_distance_from_the_closest_ball(game, index = 0):
-    if len(game.balls) != 0:
-        distance_from_closest_ball = euclidean_dist_bubble_and_player(game.balls[0], game.players[0])
-        closest_ball = game.balls[0]
-    else:
-        distance_from_closest_ball = euclidean_dist_bubble_and_player(game.hexagons[0], game.players[0])
-        closest_ball = game.hexagons[0]
-    for i in range(1, len(game.balls)):
-        cur_ball = game.balls[i]
-        cur_dist = euclidean_dist_bubble_and_player(cur_ball, game.players[0])
-        if cur_dist < distance_from_closest_ball:
-            distance_from_closest_ball = cur_dist
-            closest_ball = cur_ball
-    for i in range(len(game.hexagons)):
-        cur_ball = game.hexagons[i]
-        cur_dist = euclidean_dist_bubble_and_player(cur_ball, game.players[0])
-        if cur_dist < distance_from_closest_ball:
-            distance_from_closest_ball = cur_dist
-            closest_ball = cur_ball
-    return closest_ball, distance_from_closest_ball
+    bubbles = game.balls + game.hexagons
+    return find_closest_bubble_from_list(game, bubbles)
+
+
+def find_closest_bubble_from_list(game, bubbles_list):
+    bubbles_dist = [euclidean_dist_bubble_and_player(bubble, game.players[0]) for bubble in bubbles_list]
+    min_dist_bubble_index = int(np.argmin(np.array(bubbles_dist)))
+    return bubbles_list[min_dist_bubble_index], bubbles_dist[min_dist_bubble_index]
+
 
 def find_the_distance_from_the_closest_smallest_ball(game):
-    if len(game.balls) != 0:
-        distance_from_closest_smallest_ball = euclidean_dist_bubble_and_player(game.balls[0], game.players[0])
-        closest_smallest_ball = game.balls[0]
-        size = game.balls[0].size
-    else:
-        distance_from_closest_smallest_ball = euclidean_dist_bubble_and_player(game.hexagons[0], game.players[0])
-        closest_smallest_ball = game.hexagons[0]
-        size = game.hexagons[0].size
-    for i in range(1, len(game.balls)):
-        cur_ball = game.balls[i]
-        cur_size = game.balls[i].size
-        cur_dist = euclidean_dist_bubble_and_player(cur_ball, game.players[0])
-        if cur_dist < distance_from_closest_smallest_ball and cur_size <= size:
-            distance_from_closest_smallest_ball = cur_dist
-            closest_smallest_ball = cur_ball
-            size = cur_size
-        elif cur_size < size:
-            distance_from_closest_smallest_ball = cur_dist
-            closest_smallest_ball = cur_ball
-            size = cur_size
-    for i in range(len(game.hexagons)):
-        cur_ball = game.hexagons[i]
-        cur_size = game.hexagons[i].size
-        cur_dist = euclidean_dist_bubble_and_player(cur_ball, game.players[0])
-        if cur_dist < distance_from_closest_smallest_ball and cur_size <= size:
-            distance_from_closest_smallest_ball = cur_dist
-            closest_smallest_ball = cur_ball
-            size = cur_size
-        elif cur_size < size:
-            distance_from_closest_smallest_ball = cur_dist
-            closest_smallest_ball = cur_ball
-            size = cur_size
-    return closest_smallest_ball, distance_from_closest_smallest_ball
+    bubbles = game.balls + game.hexagons
+    min_size = min([bubble.size for bubble in bubbles])
+    small_bubbles = [bubble for bubble in bubbles if bubble.size == min_size]
+    return find_closest_bubble_from_list(game, small_bubbles)
 
 
 def time_from_bubble_and_player(game, bubble, axis=0, player_index=0):
@@ -268,7 +229,7 @@ def pick_up_bonuses(game):
         return distance_from_closest_bonus
     for bonus in game.bonuses:
         if bonus.rect.centery > 20:
-            distance_from_bonus = WINDOWWIDTH + 1
+            continue
         else:
             distance_from_bonus = distance_between_bonus_and_player(bonus, game)
         if distance_from_bonus < distance_from_closest_bonus:
