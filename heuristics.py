@@ -97,10 +97,21 @@ def zero_heuristic(game, start):
 
 # Helper functions
 
-def distance_from_weapon_and_ball(game):
+def distance_from_weapon_and_smallest_bubbles(game):
+    bubbles = game.balls + game.hexagons
+    min_size = min([bubble.size for bubble in bubbles])
+    small_bubbles = [bubble for bubble in bubbles if bubble.size == min_size]
+    return distance_from_weapon_and_bubbles_list(game, small_bubbles)
+
+
+def distance_from_weapon_and_bubble(game):
     if game.players[0].weapon.is_active:
-        return min([abs(ball.rect.centerx - game.players[0].weapon.rect.centerx) for ball in game.balls + game.hexagons])
+        return distance_from_weapon_and_bubbles_list(game, game.balls + game.hexagons)
     return WINDOWWIDTH
+
+
+def distance_from_weapon_and_bubbles_list(game, bubbles_list):
+    return min([abs(bubble.rect.centerx - game.players[0].weapon.rect.centerx) for bubble in bubbles_list])
 
 
 def find_the_distance_from_the_closest_ball_at_x_axis(game, index = 0):
