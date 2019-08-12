@@ -32,7 +32,7 @@ def init_gui():
 
 
 def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
-                calc_stats=False,
+                calc_stats=True,
                 heuristic=shoot_on_small_balls_heuristic,
                 is_goal_func=is_sub_goal_steps_score_bonuses):
     if calc_stats:
