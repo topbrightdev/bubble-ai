@@ -15,6 +15,10 @@ def g_function_by_steps(game, start):
     return (start.time_left - game.time_left) / TIME_UNIT
 
 
+def is_sub_goal_score_bonuses(game, start):
+    return is_sub_goal_by_bonuses(game, start) or is_sub_goal_by_score(game, start)
+
+
 def is_sub_goal_steps_score_bonuses(game, start):
     return is_sub_goal_by_bonuses(game, start) or is_sub_goal_score_or_steps(game, start)
 
