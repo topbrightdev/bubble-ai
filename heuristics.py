@@ -8,7 +8,7 @@ DANGER_DIST_FROM_BUBBLE = 80
 DANGER_X_DIST_FROM_BUBBLE = 40
 DANGER_Y_DIST_FROM_BUBBLE = 80
 DANGER_TIME_FROM_BUBBLE = 7
-X_TOO_FAR_FOR_SHOOTING = 100
+X_TOO_FAR_FOR_SHOOTING = 80
 
 # heuristics:
 
@@ -87,21 +87,27 @@ def shoot_on_small_balls_heuristic(game, start):
     if game.players[0].weapon.is_active:
         dist_from_weapon_to_smallest_close_ball = distance_from_weapon_and_smallest_bubbles(game)
         if dist_from_weapon_to_smallest_close_ball > X_TOO_FAR_FOR_SHOOTING:
-            return (dist_from_weapon_to_smallest_close_ball + agent_dist_from_smallest_ball) / 3
+            return (dist_from_weapon_to_smallest_close_ball + agent_dist_from_smallest_ball)
 
-    return agent_dist_from_smallest_ball / 3
+    return agent_dist_from_smallest_ball
 
 
 # TODO if we want....
-def shoot_heuristic(game, starting_score, path_size):
-    if len(game.balls) == 0 and len(game.hexagons) == 0:
+def shoot_heuristic(game, start):
+    if not game.balls and not game.hexagons:
         return 0
-    ball, distance_from_closest_ball = find_the_distance_from_the_closest_ball_at_x_axis(game)
-    if distance_from_closest_ball < 70 and game.players[0].weapon.is_active:
-        return -(70-distance_from_closest_ball)
-    elif distance_from_closest_ball >= 70 and game.players[0].weapon.is_active:
-        return distance_from_closest_ball
-    return 0
+    agent_dist_from_closest_ball = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
+    if agent_dist_from_closest_ball < DANGER_X_DIST_FROM_BUBBLE:
+        return (DANGER_X_DIST_FROM_BUBBLE - agent_dist_from_closest_ball) * 1000
+    elif is_sub_goal_score_bonuses(game, start):
+        return 0
+
+    if game.players[0].weapon.is_active:
+        dist_from_weapon_to_closest_bubble = distance_from_weapon_and_bubble(game)
+        if dist_from_weapon_to_closest_bubble > X_TOO_FAR_FOR_SHOOTING:
+            return agent_dist_from_closest_ball + dist_from_weapon_to_closest_bubble
+
+    return agent_dist_from_closest_ball
 
 
 def zero_heuristic(game, start):
@@ -209,6 +215,7 @@ def euclidean_dist_bubble_and_player(bubble, player):
 def get_time_to_closest_bubble(game, player_index=0):
     return min([max(time_from_bubble_and_player(game, cur_bubble, 0, player_index),
                     time_from_bubble_and_player(game, cur_bubble, 1, player_index)) for cur_bubble in game.balls + game.hexagons])
+
 
 def time_from_closest_bubble_at_axis(game, axis=0, player_index=0):
     if len(game.balls) != 0:

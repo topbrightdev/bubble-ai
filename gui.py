@@ -33,9 +33,10 @@ def init_gui():
 
 def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
                 calc_stats=False,
-                heuristic=stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic,
+                heuristic=shoot_heuristic,
                 is_goal_func=is_sub_goal_steps_score_bonuses):
     if calc_stats:
+        player_dies_count = 0
         cur_level = level # TODO
         list_of_open_nodes = []
     game.load_level(level)
@@ -47,9 +48,13 @@ def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
             if game.level_completed or game.is_completed: # TODO
                 print("------------------Finished level %s------------------" % cur_level) # TODO
                 cur_level += 1 # TODO
+            if game.dead_player:
+                player_dies_count += 1
+                print("------------------Player dead %s------------------" % player_dies_count) # TODO
             if game.is_completed or game.game_over:
                 final_score = game.get_score()
-                return list_of_open_nodes, cur_level, final_score
+                final_lives = game.players[0].lives
+                return list_of_open_nodes, cur_level, final_score, player_dies_count, final_lives
         draw_world(game, font, clock, screen, main_menu, load_level_menu)
         pygame.display.update()
         if calc_stats:
