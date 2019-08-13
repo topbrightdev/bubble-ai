@@ -335,6 +335,7 @@ class Game:
 
     def get_successors(self):
         successors_list = []
+        random.shuffle(A_STAR_ACTION_LIST)
         for action in A_STAR_ACTION_LIST:
             successor = self.deep_copy_game()
             successor.play_step(action)
