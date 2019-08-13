@@ -12,7 +12,6 @@ X_TOO_FAR_FOR_SHOOTING = 100
 
 # heuristics:
 
-
 def stay_in_ball_area_but_not_too_close_heuristic_time_admissible(game, start):
     if not game.balls and not game.hexagons:
         return 0
