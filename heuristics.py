@@ -4,7 +4,7 @@ from a_star_utils import *
 import numpy as np
 
 
-DANGER_DIST_FROM_BUBBLE = 290
+DANGER_DIST_FROM_BUBBLE = 80
 DANGER_X_DIST_FROM_BUBBLE = 40
 DANGER_Y_DIST_FROM_BUBBLE = 80
 DANGER_TIME_FROM_BUBBLE = 7
@@ -49,14 +49,16 @@ def stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic(game,
 def bonus_and_ball_but_not_too_close_heuristic(game, start):
     if not game.balls and not game.hexagons:
         return 0
-    agent_dist = find_the_distance_from_the_closest_bubble(game)[1]
     agent_x_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
-    if agent_dist < DANGER_DIST_FROM_BUBBLE and agent_x_dist < DANGER_X_DIST_FROM_BUBBLE:
-        return (DANGER_DIST_FROM_BUBBLE-agent_dist) * 1000
+    if agent_x_dist < DANGER_X_DIST_FROM_BUBBLE:
+        return (abs(DANGER_X_DIST_FROM_BUBBLE-agent_x_dist)) * 1000
     elif is_sub_goal_score_bonuses(game, start):
         return 0
+
     dist_from_bonus = pick_up_bonuses(game)
-    return min(dist_from_bonus, agent_dist)
+    if dist_from_bonus == WINDOWWIDTH + 1:
+        return agent_x_dist
+    return dist_from_bonus
 
 
 def stay_in_center_heuristic(game, start):
@@ -68,6 +70,7 @@ def stay_in_center_heuristic(game, start):
         return (DANGER_DIST_FROM_BUBBLE - agent_dist) * 1000
     elif is_sub_goal_score_bonuses(game, start):
         return 0
+
     x_center = WINDOWWIDTH // 2
     return abs(game.players[0].rect.centerx - x_center)
 
@@ -75,16 +78,18 @@ def stay_in_center_heuristic(game, start):
 def shoot_on_small_balls_heuristic(game, start):
     if not game.balls and not game.hexagons:
         return 0
-    agent_dist_from_smallest_ball = find_the_distance_from_the_closest_smallest_ball_x_axis(game)[1]
     agent_dist_from_closest_ball = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
     if agent_dist_from_closest_ball < DANGER_X_DIST_FROM_BUBBLE:
         return (DANGER_X_DIST_FROM_BUBBLE - agent_dist_from_closest_ball) * 1000
-    elif game.players[0].weapon.is_active:
+    elif is_sub_goal_score_bonuses(game, start):
+        return 0
+
+    agent_dist_from_smallest_ball = find_the_distance_from_the_closest_smallest_ball_x_axis(game)[1]
+    if game.players[0].weapon.is_active:
         dist_from_weapon_to_smallest_close_ball = distance_from_weapon_and_smallest_bubbles(game)
         if dist_from_weapon_to_smallest_close_ball > X_TOO_FAR_FOR_SHOOTING:
             return (dist_from_weapon_to_smallest_close_ball + agent_dist_from_smallest_ball) / 3
-    elif is_sub_goal_score_bonuses(game, start):
-        return 0
+
     return agent_dist_from_smallest_ball / 3
 
 
