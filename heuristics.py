@@ -49,15 +49,15 @@ def bonus_and_ball_but_not_too_close_heuristic(game, start):
     if not game.balls and not game.hexagons:
         return 0
     agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
-    if agent_dist < DANGER_X_DIST_FROM_BUBBLE:
-        return (DANGER_X_DIST_FROM_BUBBLE - agent_dist) * 1000
+    if agent_dist < DANGER_X_DIST_FROM_BUBBLE + 10:
+        return (DANGER_X_DIST_FROM_BUBBLE + 10 - agent_dist) * 1000
     elif is_sub_goal_score_bonuses(game, start):
         return 0
 
     dist_from_bonus = pick_up_bonuses(game)
     if dist_from_bonus == WINDOWWIDTH + 1:
         return agent_dist/PLAYER_SPEED
-    return dist_from_bonus/PLAYER_SPEED
+    return dist_from_bonus
 
 
 def stay_in_center_heuristic(game, start):
@@ -98,17 +98,19 @@ def shoot_heuristic(game, start):
     if not game.balls and not game.hexagons:
         return 0
     agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
-    if agent_dist < DANGER_X_DIST_FROM_BUBBLE:
-        return (DANGER_X_DIST_FROM_BUBBLE - agent_dist) * 1000
+    if agent_dist < DANGER_X_DIST_FROM_BUBBLE + 15:
+        euclidean_dist = find_the_distance_from_the_closest_bubble(game)[1]
+        if euclidean_dist < DANGER_DIST_FROM_BUBBLE:
+            return (DANGER_X_DIST_FROM_BUBBLE + 15 - agent_dist) * 1000
     elif is_sub_goal_score_bonuses(game, start):
         return 0
 
     if game.players[0].weapon.is_active:
         dist_from_weapon_to_closest_bubble = distance_from_weapon_and_bubble(game)
         if dist_from_weapon_to_closest_bubble > X_TOO_FAR_FOR_SHOOTING:
-            return (agent_dist + dist_from_weapon_to_closest_bubble)
+            return (agent_dist/PLAYER_SPEED + dist_from_weapon_to_closest_bubble)
 
-    return agent_dist
+    return agent_dist/PLAYER_SPEED
 
 
 def zero_heuristic(game, start):
@@ -247,7 +249,7 @@ def pick_up_bonuses(game):
     if len(game.bonuses) == 0:
         return distance_from_closest_bonus
     for bonus in game.bonuses:
-        if abs(game.players[0].rect.top - bonus.rect.centery) > 20:
+        if abs(game.players[0].rect.top - bonus.rect.centery) > 10:
             continue
         else:
             distance_from_bonus = distance_between_bonus_and_player(bonus, game)

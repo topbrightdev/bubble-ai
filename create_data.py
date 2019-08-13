@@ -7,11 +7,11 @@ ALL_HEURISTICS = [
     # (stay_in_ball_area_but_not_too_close_heuristic_time_admissible, "stay_in_ball_area_but_not_too_close_heuristic_time_admissible"),
     # (stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic"),
     # (stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic"),
-    # (player_bonus_and_ball_heuristic, "player_bonus_and_ball_heuristic"),
+    # (bonus_and_ball_but_not_too_close_heuristic, "bonus_and_ball_but_not_too_close_heuristic"),
     # (stay_in_center_heuristic, "stay_in_center_heuristic"),
     # (shoot_on_small_balls_heuristic, "shoot_on_small_balls_heuristic"),
-    # (shoot_heuristic, "shoot_heuristic"),
-    (zero_heuristic, "zero_heuristic")
+    (shoot_heuristic, "shoot_heuristic"),
+    # (zero_heuristic, "zero_heuristic")
     ]
 IS_GOAL_FUNC = is_sub_goal_steps_score_bonuses
 MAX_STEPS_OPTION = [MAX_PATH_SIZE]
