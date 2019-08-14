@@ -27,14 +27,14 @@ def is_sub_goal_score_bonuses(game, start):
     return is_sub_goal_by_bonuses(game, start) or is_sub_goal_by_score(game, start)
 
 
-def is_sub_goal_steps_score_bonuses(game, start):
+def is_sub_goal_steps_score_bonuses(game, start,steps=MAX_PATH_SIZE):
     """
     :param game: the state of the game when A* was called
     :param start: the state represented by the current node in the search
     :return: True if a bonus was collected, a bubble was blown or a set number of game iterations passed between the
     start state to the current state(game). False otherwise
     """
-    return is_sub_goal_by_bonuses(game, start) or is_sub_goal_score_or_steps(game, start)
+    return is_sub_goal_by_bonuses(game, start) or is_sub_goal_score_or_steps(game, start,steps=MAX_PATH_SIZE)
 
 
 def is_sub_goal_by_bonuses(game, start):
