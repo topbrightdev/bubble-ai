@@ -14,9 +14,9 @@ class DQNAgent:
         self.action_size = action_size
         self.memory = deque(maxlen=2000)
         self.gamma = 0.95    # discount rate
-        self.epsilon = 0.0  # exploration rate
+        self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.05
-        self.epsilon_decay = 0.99995 # TODO check if good
+        self.epsilon_decay = 0.999995 # TODO check if good
         self.learning_rate = 0.001
         self.model = self._build_model()
 
@@ -138,7 +138,7 @@ def create_new_play_level(level):
 
         play_single_action(game, cur_action, AI_PLAYER_NUM)
 
-        game.update_nn()
+        game.update() # TODO maybe add update_nn
         draw_world(game, font, clock, screen, main_menu, load_level_menu)
 
         next_state = game.get_represented_state()
@@ -176,8 +176,8 @@ def create_new_play_level(level):
 def train_agent_by_play(agent, batch_size):
     for e in range(EPISODES):
         done = False
-        # level = random.randint(1, 7)
-        level = 6
+        level = random.randint(1, 8)
+        # level = 6
         if SHOW_NN_GUI:
             game, font, clock, screen, main_menu, load_level_menu = start_nn_game(level)
         else:
@@ -200,15 +200,12 @@ def train_agent_by_play(agent, batch_size):
                 cur_action = MOVE_RIGHT
             elif action == 2:
                 cur_action = SHOOT
-            elif action == 3:
-                cur_action = STAY
-                action = random.randint(0, 1)
             else:
                 print("invalid action")
-                cur_action = 0
+                cur_action = ''
             play_single_action(game, cur_action, AI_PLAYER_NUM)
 
-            game.update_nn()
+            game.update()
             if SHOW_NN_GUI:
                 draw_world(game, font, clock, screen, main_menu, load_level_menu)
 
@@ -238,9 +235,9 @@ def train_agent_by_play(agent, batch_size):
                 agent.replay(batch_size)
                 if done:
                     break
-        if e % 50 == 0:
+        if e % 1000 == 0:
             if RUN_LOCAL:
-                agent.save("./save/bubble_nn-dqn_e" + str(e) + "_level" + str(level) + "_score" + str(
+                agent.save("/mnt/ssd/OTHER/tmp/e" + str(e) + "_l" + str(level) + "_s" + str(
                     game.get_score()) + "_.h5")
             else:
                 agent.save(
@@ -253,10 +250,10 @@ if __name__ == "__main__":
     agent = DQNAgent(state_size, action_size)
     agent_name = "bubble_nn-dqn_after_replay.h5"
     if RUN_LOCAL:
-        agent.load("./save/" + agent_name)
+        # agent.load("./save/" + agent_name)
         pass
     else:
-        agent.load("./" + agent_name)
+        # agent.load("./" + agent_name)
         pass
     batch_size = 32 # TODO check if good
 

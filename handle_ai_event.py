@@ -39,7 +39,7 @@ def play_single_action(game, cur_action, player_num=0):
     elif cur_action == MOVE_RIGHT:
         game.players[player_num].moving_right = True
         game.players[player_num].moving_left = False
-    if cur_action == SHOOT and not game.players[player_num].weapon.is_active:
+    elif cur_action == SHOOT and not game.players[player_num].weapon.is_active:
         game.players[player_num].moving_left = False
         game.players[player_num].moving_right = False
         game.players[player_num].shoot()

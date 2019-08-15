@@ -386,15 +386,13 @@ class Game:
 
     def get_x_closest_bubbles(self, x):
         # TODO NN func
-        closest_x_balls = []
-        all_balls_list = []
-        for ball in self.balls:
-            all_balls_list.append((ball, heuristics.distance_between_ball_and_player(ball, self))) # TODO move here
-        for ball in self.hexagons:
-            all_balls_list.append((ball, heuristics.distance_between_ball_and_player(ball, self))) # TODO move here
+        closest_x_bubbles = []
+        all_bubbles_list = []
+        for bubble in self.balls + self.hexagons:
+            all_bubbles_list.append((bubble, heuristics.dist_from_bubble_and_player(bubble, self.players[0], axis=0))) # TODO move here
 
-        sorted_balls = sorted(all_balls_list, key=operator.itemgetter(1))
+        sorted_balls = sorted(all_bubbles_list, key=operator.itemgetter(1))
         for i in range(min(x, len(sorted_balls))):
-            closest_x_balls.append(sorted_balls[i][0])
+            closest_x_bubbles.append(sorted_balls[i][0])
 
-        return closest_x_balls
+        return closest_x_bubbles
