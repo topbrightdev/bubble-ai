@@ -14,8 +14,13 @@ from settings import *
 
 
 class Game:
-
+    """ stands for a bubble trouble game"""
     def __init__(self, level=1):
+        """
+        :param self:
+        :param level: the starting level of the game
+        :return:
+        """
         self.score = 0
         self.g_score = np.inf
         self.h_score = np.inf
@@ -44,12 +49,24 @@ class Game:
                 self.max_level_available = 1
 
     def __lt__(self, other):
+        """
+        compares two game objects (states) according to their F score
+        :param self:
+        :param other:
+        :return:  True if f(self)<f(other), False if f(self)>f(other) and True or False rndomly if f(self)==f(other)
+        """
         if bool(random.getrandbits(1)):
             return self.get_f_score() < other.get_f_score()
         else:
             return self.get_f_score() <= other.get_f_score()
 
     def check_if_equal(self, other):
+        """
+        compares two game objects (states) and checks if they are equal
+        :param self:
+        :param other:
+        :return: True if states are equal, False otherwise
+        """
         if self.get_time_left() == other.get_time_left():
             if len(self.balls) == len(other.balls) and len(self.hexagons) == len(other.hexagons):
                 for player in self.players:
@@ -81,27 +98,62 @@ class Game:
 
 
     def add_to_score(self, to_add):
+        """
+        adds to_add to game's current score
+        :param self:
+        :param to_add: amount of points to be added to score
+        :return:
+        """
         self.score += to_add
 
     def get_score(self):
+        """
+        :param self:
+        :return: game's current score
+        """
         return int(self.score)
 
     def update_g_score(self, value):
+        """
+        sets the g score
+        :param self:
+        :param value:
+        :return:
+        """
         self.g_score = value
 
     def get_g_score(self):
+        """
+        :param self:
+        :return: g score
+        """
         return self.g_score
 
     def update_h_score(self, value):
+        """
+        sets h_score
+        :param value:
+        :return:
+        """
         self.h_score = value
 
     def get_h_score(self):
+        """
+        :return: game's h score
+        """
         return self.h_score
 
     def get_f_score(self):
+        """
+        :return: f score
+        """
         return self.get_g_score() + self.get_h_score()
 
     def load_level(self, level):
+        """
+        :param level: level number
+        :return:
+        """
         self.is_restarted = True
         if self.is_multiplayer and len(self.players) == 1:
             self.players.append(Player('player2.png'))
@@ -139,6 +191,10 @@ class Game:
                 self.hexagons.append(Hexagon(x, y, size, speed))
 
     def _check_for_collisions(self):
+        """
+        checks for collisions with bubbles or bonuses
+        :return:
+        """
         for player in self.players:
             self._check_for_bubble_collision(self.balls, True, player)
             self._check_for_bubble_collision(self.hexagons, False, player)
@@ -162,6 +218,11 @@ class Game:
         return False
 
     def _check_for_bonus_collision(self, player):
+        """
+        checks if player caught a bonus
+        :param player:
+        :return: True if it did. False otherwise
+        """
         for bonus_index, bonus in enumerate(self.bonuses):
             if pygame.sprite.collide_mask(bonus, player):
                 self._activate_bonus(bonus.type, player)
@@ -170,6 +231,11 @@ class Game:
         return False
 
     def _decrease_lives(self, player):
+        """
+        decrease players lives in 1. if player had 0 lives left, game is over
+        :param player:
+        :return:
+        """
         player.lives -= 1
         if player.lives:
             self.dead_player = True
@@ -178,21 +244,40 @@ class Game:
             self.game_over = True
 
     def _restart(self):
+        """
+        restarts game
+        :return:
+        """
         self.load_level(self.level)
 
     @staticmethod
     def _drop_bonus():
+        """
+        randomly drops a bonus, and randomly chooses bonus type
+        :return: bonus type
+        """
         if random.randrange(BONUS_DROP_RATE) == 0:
             bonus_type = random.choice(bonus_types)
             return bonus_type
 
     def _activate_bonus(self, bonus, player):
+        """
+        activates bonus
+        :param bonus: bonus type
+        :param player: the player that caught the bonus
+        :return:
+        """
         if bonus == BONUS_LIFE:
             player.lives += 1
         elif bonus == BONUS_TIME:
             self.time_left += 50
 
     def _split_ball(self, ball_index):
+        """
+        splits ball into to smaller balls
+        :param ball_index:
+        :return:
+        """
         ball = self.balls[ball_index]
         if ball.size > 1:
             self.balls.append(Ball(
@@ -210,6 +295,12 @@ class Game:
             self.bonuses.append(bonus)
 
     def _split_hexagon(self, hex_index):
+        """
+        splits hexagon into to smaller hexagons
+
+        :param hex_index:
+        :return:
+        """
         hexagon = self.hexagons[hex_index]
         if hexagon.size > 1:
             self.hexagons.append(
@@ -226,6 +317,11 @@ class Game:
             self.bonuses.append(bonus)
 
     def update(self, is_a_star=False):
+        """
+        updates the location and state of all
+        :param is_a_star: True if updating as part of A* finding best steps or as part of the game itself
+        :return: self
+        """
         if self.level_completed or self.is_completed:
             self.add_to_score(TIME_LEFT_SCORE_FACTOR * self.get_time_left())
         if self.level_completed and not self.is_completed:
@@ -255,15 +351,27 @@ class Game:
         return self
 
     def tick_time_unit(self):
+        """
+        adds 1 to the game's clock
+        :return:
+        """
         self.time_left -= TIME_UNIT
         if self.time_left <= 0:
             for player in self.players:
                 self._decrease_lives(player)
 
     def get_time_left(self):
+        """
+
+        :return: time left to complete level
+        """
         return int(np.ceil(self.time_left))
 
     def deep_copy_game(self):
+        """
+
+        :return: a deep copy of the game
+        """
         game_copy = Game(level=self.level)
 
         game_copy.balls = []
@@ -300,6 +408,11 @@ class Game:
         return game_copy
 
     def play_step(self, action):
+        """
+        plays 1 step according to given action
+        :param action:
+        :return:
+        """
         self.players[0].moving_left = False
         self.players[0].moving_right = False
         if action == MOVE_LEFT:
@@ -334,6 +447,10 @@ class Game:
                 return
 
     def get_successors(self):
+        """
+        gets the children states of the given state
+        :return:
+        """
         successors_list = []
         random.shuffle(A_STAR_ACTION_LIST)
         for action in A_STAR_ACTION_LIST:
