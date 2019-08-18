@@ -4,18 +4,18 @@ from heuristics import *
 
 
 ALL_HEURISTICS = [
-    # (stay_in_ball_area_but_not_too_close_heuristic_time_admissible, "stay_in_ball_area_but_not_too_close_heuristic_time_admissible"),
-    # (stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic"),
-    # (stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic"),
-    # (bonus_and_ball_but_not_too_close_heuristic, "bonus_and_ball_but_not_too_close_heuristic"),
-    # (stay_in_center_heuristic, "stay_in_center_heuristic"),
-    # (shoot_on_small_balls_heuristic, "shoot_on_small_balls_heuristic"),
+    (stay_in_ball_area_but_not_too_close_heuristic_time_admissible, "stay_in_ball_area_but_not_too_close_heuristic_time_admissible"),
+    (stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic"),
+    (stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic"),
+    (bonus_and_ball_but_not_too_close_heuristic, "bonus_and_ball_but_not_too_close_heuristic"),
+    (stay_in_center_heuristic, "stay_in_center_heuristic"),
+    (shoot_on_small_balls_heuristic, "shoot_on_small_balls_heuristic"),
     (shoot_heuristic, "shoot_heuristic"),
-    # (zero_heuristic, "zero_heuristic")
+    (zero_heuristic, "zero_heuristic")
     ]
 IS_GOAL_FUNC = is_sub_goal_steps_score_bonuses
-MAX_STEPS_OPTION = [MAX_PATH_SIZE]
-NUM_OF_LOOPS_FOR_EACH_HEURISTIC = 2
+MAX_STEPS_OPTION = list(range(1,11))
+NUM_OF_LOOPS_FOR_EACH_HEURISTIC = 10
 
 HEURISTIC_FOLDER = 'heuristics_data/'
 CSV_SUF = '.csv'
@@ -92,6 +92,9 @@ def create_list_of_heuristics_data(heuristics):
                                                MEDIAN_OPEN_NODES, FINAL_LEVEL, FINAL_SCORE, MAX_PATH_SIZE_COL, PLAYER_DIES_COUNT, FINAL_PLAYER_LIVES])
         for iter in range(1, NUM_OF_LOOPS_FOR_EACH_HEURISTIC + 1):
             for num_step in MAX_STEPS_OPTION:
+                print(heuristic_name)
+                print('iteration: ', str(iter))
+                print('num of steps', str(num_step))
                 iter_file_path = HEURISTIC_FOLDER + heuristic_name + ('/iter_%s_steps_%s' % (iter, num_step)) + CSV_SUF
                 cur_df_row = create_heuristic_data(heuristic, iter_file_path, IS_GOAL_FUNC, num_step)
                 cur_heuristic_df = cur_heuristic_df.append(cur_df_row, ignore_index=True)
