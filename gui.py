@@ -60,7 +60,6 @@ def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
     main_menu.is_active = False
     pygame.mouse.set_visible(False)
     while game.is_running:
-        pygame.time.delay(5)
         game.update()
         if calc_stats:
             if game.level_completed or game.is_completed: # TODO
