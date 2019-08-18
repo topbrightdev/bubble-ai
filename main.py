@@ -10,7 +10,7 @@ def start_player_game():
 def run_ai_game_and_return_data(level, heuristic, is_goal_func):
     game, font, clock, screen, main_menu, load_level_menu = init_gui()
     game.is_ai = True
-    return start_level(level, game, font, clock, screen, main_menu, load_level_menu, heuristic=heuristic, calc_stats=True, is_goal_func=is_sub_goal_steps_score_bonuses)
+    return start_level(level, game, font, clock, screen, main_menu, load_level_menu, heuristic=heuristic, calc_stats=True, is_goal_func=is_goal_func)
 
 
 ## NN
