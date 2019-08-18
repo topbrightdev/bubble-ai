@@ -2,6 +2,17 @@ import heapq
 
 
 def a_star(start, is_goal, heuristic, g_function):
+    """
+    runs a star algorithm to find goal node in graph
+    :param start: Game object representing the start state
+    :param is_goal: a functions that determines whether a state is a goal state or not
+    :param heuristic: a function that gives the heuristic's value of a state
+    :param g_function: a function that returns the cost of the path from the start state to the current state
+    :return: path, path_size, open_nodes
+    path - list of actions to be done
+    path_size - len of path
+    open_nodes - nodes that were visited by the algorithm
+    """
     visited_set = set()
     fringe_heap = [start]
     came_from = {}
@@ -14,7 +25,7 @@ def a_star(start, is_goal, heuristic, g_function):
         open_nodes += 1
         if is_goal(current, start):
             path, path_size = reconstruct_path(came_from, current)
-            print(open_nodes)
+            # print(open_nodes)
             return path, path_size, open_nodes
 
         visited_set.add(current)
@@ -44,6 +55,12 @@ def a_star(start, is_goal, heuristic, g_function):
 
 
 def reconstruct_path(came_from, current):
+    """
+    reconstructs path from a dictionary containing a nodes and their parents.
+    :param came_from: a dictionary containing a nodes and their parents.
+    :param current: the node used for starting the reconstruction (last node)
+    :return: reconstructed path and it's length
+    """
     total_path = []
     while current in came_from.keys():
         # add the action that get from previous to the current node, and insert to the start of the list
