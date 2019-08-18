@@ -20,7 +20,21 @@ def stay_in_ball_area_but_not_too_close_heuristic_time_admissible(game, start):
             return (DANGER_TIME_FROM_BUBBLE-time_to_closest_bubble) * 1000
     elif is_sub_goal_score_bonuses(game, start):
         return 0
-    return time_to_closest_bubble
+    ai_player = game.players[0]
+    if len(game.bonuses) != 0:
+        x_dist_to_closest_bonus = min([min(abs(ai_player.rect.left - bonus.rect.right),
+                                         abs(ai_player.rect.right - bonus.rect.left)) for bonus in game.bonuses])
+        time_to_closest_bonus = x_dist_to_closest_bonus / PLAYER_SPEED
+    else:
+        time_to_closest_bonus = np.inf
+    if ai_player.weapon.is_active:
+        ai_weapon = ai_player.weapon
+        x_dist_from_weapon_to_bubble = min([min(abs(bubble.rect.left - ai_weapon.rect.right),
+                                              abs(bubble.rect.right - ai_weapon.rect.left)) for bubble in game.balls + game.hexagons])
+        time_from_weapon_to_bubble = x_dist_from_weapon_to_bubble / PLAYER_SPEED # hosem bubble max_speed
+    else:
+        time_from_weapon_to_bubble = np.inf
+    return min(time_from_weapon_to_bubble, time_to_closest_bonus, time_to_closest_bonus)
 
 
 def stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic(game, start):
@@ -57,7 +71,7 @@ def bonus_and_ball_but_not_too_close_heuristic(game, start):
     dist_from_bonus = pick_up_bonuses(game)
     if dist_from_bonus == WINDOWWIDTH + 1:
         return agent_dist/PLAYER_SPEED
-    return 100 + (dist_from_bonus/PLAYER_SPEED)
+    return dist_from_bonus/PLAYER_SPEED
 
 
 def stay_in_center_heuristic(game, start):

@@ -5,16 +5,16 @@ from heuristics import *
 
 ALL_HEURISTICS = [
     (stay_in_ball_area_but_not_too_close_heuristic_time_admissible, "stay_in_ball_area_but_not_too_close_heuristic_time_admissible"),
-    (stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic"),
-    (stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic"),
-    (bonus_and_ball_but_not_too_close_heuristic, "bonus_and_ball_but_not_too_close_heuristic"),
-    (stay_in_center_heuristic, "stay_in_center_heuristic"),
-    (shoot_on_small_balls_heuristic, "shoot_on_small_balls_heuristic"),
-    (shoot_heuristic, "shoot_heuristic"),
-    (zero_heuristic, "zero_heuristic")
+    # (stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic"),
+    # (stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic"),
+    # (bonus_and_ball_but_not_too_close_heuristic, "bonus_and_ball_but_not_too_close_heuristic"),
+    # (stay_in_center_heuristic, "stay_in_center_heuristic"),
+    # (shoot_on_small_balls_heuristic, "shoot_on_small_balls_heuristic"),
+    # (shoot_heuristic, "shoot_heuristic"),
+    # (zero_heuristic, "zero_heuristic")
     ]
 IS_GOAL_FUNC = is_sub_goal_steps_score_bonuses
-MAX_STEPS_OPTION = list(range(1,11))
+MAX_STEPS_OPTION = list(range(6,7))
 NUM_OF_LOOPS_FOR_EACH_HEURISTIC = 10
 
 HEURISTIC_FOLDER = 'heuristics_data/'
@@ -110,9 +110,9 @@ def create_list_of_heuristics_data(heuristics):
 
     all_heuristics_file_path = HEURISTIC_FOLDER + FINAL_DF_NAME + CSV_SUF
     ensure_dir_exists(all_heuristics_file_path)
-    all_heuristics_df.to_csv(all_heuristics_file_path, index=False)
+    # all_heuristics_df.to_csv(all_heuristics_file_path, index=False)
 
-    final_df = pd.read_csv(all_heuristics_file_path)
+    # final_df = pd.read_csv(all_heuristics_file_path)
     pass
 
 
