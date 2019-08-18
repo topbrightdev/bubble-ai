@@ -57,7 +57,7 @@ def bonus_and_ball_but_not_too_close_heuristic(game, start):
     dist_from_bonus = pick_up_bonuses(game)
     if dist_from_bonus == WINDOWWIDTH + 1:
         return agent_dist/PLAYER_SPEED
-    return dist_from_bonus
+    return 100 + (dist_from_bonus/PLAYER_SPEED)
 
 
 def stay_in_center_heuristic(game, start):
