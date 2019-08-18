@@ -37,7 +37,7 @@ def init_gui():
 
 def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
                 calc_stats=False,
-                heuristic=shoot_heuristic,
+                heuristic=stay_in_center_heuristic,
                 is_goal_func=is_sub_goal_steps_score_bonuses):
     """
     :param level:
