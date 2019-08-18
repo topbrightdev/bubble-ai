@@ -7,6 +7,10 @@ total_open_nodes = 0
 
 
 def init_gui():
+    """
+    starts gui for game
+    :return:
+    """
     pygame.init()
     pygame.display.set_caption('Bubble Trouble')
     pygame.mouse.set_visible(True)
@@ -35,6 +39,19 @@ def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
                 calc_stats=False,
                 heuristic=shoot_heuristic,
                 is_goal_func=is_sub_goal_steps_score_bonuses):
+    """
+    :param level:
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :param calc_stats:
+    :param heuristic: heuristic function
+    :param is_goal_func:
+    :return:
+    """
     if calc_stats:
         player_dies_count = 0
         cur_level = level # TODO
@@ -43,6 +60,7 @@ def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
     main_menu.is_active = False
     pygame.mouse.set_visible(False)
     while game.is_running:
+        pygame.time.delay(5)
         game.update()
         if calc_stats:
             if game.level_completed or game.is_completed: # TODO
@@ -74,6 +92,16 @@ def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
 
 
 def start_main_menu(game, font, clock, screen, main_menu, load_level_menu):
+    """
+    starts the main menu allowing to pick a player type
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     main_menu.is_active = True
     while main_menu.is_active:
         main_menu.draw()
@@ -82,6 +110,16 @@ def start_main_menu(game, font, clock, screen, main_menu, load_level_menu):
 
 
 def start_load_level_menu(game, font, clock, screen, main_menu, load_level_menu):
+    """
+    start the menu screen that allows to pick level
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     load_level_menu.is_active = True
     while load_level_menu.is_active:
         load_level_menu.draw()
@@ -90,51 +128,168 @@ def start_load_level_menu(game, font, clock, screen, main_menu, load_level_menu)
 
 
 def start_single_player_level_menu(game, font, clock, screen, main_menu, load_level_menu):
+    """
+    starts a single player level
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     game.is_multiplayer = False
     start_load_level_menu(game, font, clock, screen, main_menu, load_level_menu)
 
 
 def start_ai_player_level_menu(game, font, clock, screen, main_menu, load_level_menu):
+    """
+    starts a level played by AI player
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     game.is_multiplayer = False
     game.is_ai = True
     start_load_level_menu(game, font, clock, screen, main_menu, load_level_menu)
 
 
 def start_multiplayer_level_menu(game, font, clock, screen, main_menu, load_level_menu):
+    """
+    starts a level played by 2 human players
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     game.is_multiplayer = True
     start_load_level_menu(game, font, clock, screen, main_menu, load_level_menu)
 
 
 def quit_game(game, font, clock, screen, main_menu, load_level_menu):
+    """
+    quits game
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     pygame.quit()
     sys.exit()
 
 
 def back(game, font, clock, screen, main_menu, load_level_menu):
+    """
+    goes back to main menu
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     load_level_menu.is_active = False
 
 
 def draw_ball(ball, game, font, clock, screen, main_menu, load_level_menu):
+    """
+    draws ball on screen
+    :param ball:
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     screen.blit(ball.image, ball.rect)
 
 
 def draw_hex(hexagon, game, font, clock, screen, main_menu, load_level_menu):
+    """
+    draws hexagon on screen
+    :param hexagon:
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     screen.blit(hexagon.image, hexagon.rect)
 
 
 def draw_player(player, game, font, clock, screen, main_menu, load_level_menu):
+    """
+    draws player on screen
+    :param player:
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     screen.blit(player.image, player.rect)
 
 
 def draw_weapon(weapon, game, font, clock, screen, main_menu, load_level_menu):
+    """
+    draws weapon on screen
+    :param weapon:
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     screen.blit(weapon.image, weapon.rect)
 
 
 def draw_bonus(bonus, game, font, clock, screen, main_menu, load_level_menu):
+    """
+    draws bonus on screen
+    :param bonus:
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     screen.blit(bonus.image, bonus.rect)
 
 
 def draw_message(message, colour, game, font, clock, screen, main_menu, load_level_menu):
+    """
+    draws message on screen
+    :param message:
+    :param colour:
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     label = font.render(message, 1, colour)
     rect = label.get_rect()
     rect.centerx = screen.get_rect().centerx
@@ -143,6 +298,16 @@ def draw_message(message, colour, game, font, clock, screen, main_menu, load_lev
 
 
 def draw_timer(game, font, clock, screen, main_menu, load_level_menu):
+    """
+    draws timer on screen
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     timer = font.render(str(game.get_time_left()), 1, BLACK)
     rect = timer.get_rect()
     rect.bottomleft = 10, WINDOWHEIGHT - 10
@@ -150,6 +315,16 @@ def draw_timer(game, font, clock, screen, main_menu, load_level_menu):
 
 
 def draw_score(game, font, clock, screen, main_menu, load_level_menu):
+    """
+    sraws score on screen
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     score = font.render("score: " + str(game.get_score()), 1, BLUE)
     rect = score.get_rect()
     rect.topright = WINDOWWIDTH - 10, 10
@@ -157,6 +332,18 @@ def draw_score(game, font, clock, screen, main_menu, load_level_menu):
 
 
 def draw_players_lives(player, game, font, clock, screen, main_menu, load_level_menu, is_main_player=True):
+    """
+    draws players lives on screen
+    :param player:
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :param is_main_player:
+    :return:
+    """
     player_image = pygame.transform.scale(player.image, (20, 20))
     rect = player_image.get_rect()
     for life_num in range(player.lives):
@@ -170,6 +357,16 @@ def draw_players_lives(player, game, font, clock, screen, main_menu, load_level_
 
 
 def draw_world(game, font, clock, screen, main_menu, load_level_menu):
+    """
+    draws the world on the screen
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     #screen.fill(WHITE)
     image = pygame.image.load(IMAGES_PATH + 'background_level.png')
     screen.blit(image,(0,0))
@@ -215,6 +412,19 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
 
 
 def handle_game_event(game, font, clock, screen, main_menu, load_level_menu, heuristic=None, calc_stats=False, is_goal_func=None):
+    """
+    handles game event such as key pressed by human player or actions chosen by AI player
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :param heuristic:
+    :param calc_stats:
+    :param is_goal_func:
+    :return:
+    """
     if game.is_ai and not game.is_nn:
         global total_open_nodes
         if heuristic is None:
@@ -263,6 +473,17 @@ def handle_game_event(game, font, clock, screen, main_menu, load_level_menu, heu
 
 
 def handle_menu_event(menu, game, font, clock, screen, main_menu, load_level_menu):
+    """
+    handles a selection in the menu
+    :param menu:
+    :param game:
+    :param font:
+    :param clock:
+    :param screen:
+    :param main_menu:
+    :param load_level_menu:
+    :return:
+    """
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             quit_game(game, font, clock, screen, main_menu, load_level_menu)
