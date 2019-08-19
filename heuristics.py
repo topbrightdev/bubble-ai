@@ -22,7 +22,7 @@ def stay_in_ball_area_but_not_too_close_heuristic_time_admissible(game, start):
             return (DANGER_TIME_FROM_BUBBLE-time_to_closest_bubble) * 1000
     elif is_sub_goal_score_bonuses(game, start):
         return 0
-    ai_player = game.players[0]
+    ai_player = game.players[AI_PLAYER_NUM]
     if len(game.bonuses) != 0:
         x_dist_to_closest_bonus = min([min(abs(ai_player.rect.left - bonus.rect.right),
                                          abs(ai_player.rect.right - bonus.rect.left)) for bonus in game.bonuses])
@@ -32,11 +32,12 @@ def stay_in_ball_area_but_not_too_close_heuristic_time_admissible(game, start):
     if ai_player.weapon.is_active:
         ai_weapon = ai_player.weapon
         x_dist_from_weapon_to_bubble = min([min(abs(bubble.rect.left - ai_weapon.rect.right),
-                                              abs(bubble.rect.right - ai_weapon.rect.left)) for bubble in game.balls + game.hexagons])
-        time_from_weapon_to_bubble = x_dist_from_weapon_to_bubble / PLAYER_SPEED # hosem bubble max_speed
+                                              abs(bubble.rect.right - ai_weapon.rect.left))
+                                            for bubble in game.balls + game.hexagons])
+        time_from_weapon_to_bubble = x_dist_from_weapon_to_bubble / PLAYER_SPEED # player speed upper bound bubble speed
     else:
         time_from_weapon_to_bubble = np.inf
-    return min(time_from_weapon_to_bubble, time_to_closest_bonus, time_to_closest_bonus)
+    return min(time_from_weapon_to_bubble, time_to_closest_bonus, time_to_closest_bubble)
 
 
 def stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic(game, start):
