@@ -6,6 +6,8 @@ import numpy as np
 
 DANGER_DIST_FROM_BUBBLE = 300
 DANGER_X_DIST_FROM_BUBBLE = 40
+SHOOT_FACTOR = 5
+DANGER_X_DIST_AT_SHOOT_HEURISTIC = 55
 DANGER_Y_DIST_FROM_BUBBLE = 80
 DANGER_TIME_FROM_BUBBLE = 7
 X_TOO_FAR_FOR_SHOOTING = 80
@@ -107,22 +109,21 @@ def shoot_on_small_balls_heuristic(game, start):
     return agent_dist_from_smallest_ball/PLAYER_SPEED
 
 
-# TODO if we want....
 def shoot_heuristic(game, start):
     if not game.balls and not game.hexagons:
         return 0
     agent_dist = find_the_distance_from_the_closest_ball_at_x_axis(game)[1]
-    if agent_dist < DANGER_X_DIST_FROM_BUBBLE + 15:
+    if agent_dist < DANGER_X_DIST_AT_SHOOT_HEURISTIC:
         euclidean_dist = find_the_distance_from_the_closest_bubble(game)[1]
         if euclidean_dist < DANGER_DIST_FROM_BUBBLE:
-            return (DANGER_X_DIST_FROM_BUBBLE + 15 - agent_dist) * 1000
+            return (DANGER_X_DIST_AT_SHOOT_HEURISTIC - agent_dist) * 1000
     elif is_sub_goal_score_bonuses(game, start):
         return 0
 
     if game.players[0].weapon.is_active:
         dist_from_weapon_to_closest_bubble = distance_from_weapon_and_bubble(game)
         if dist_from_weapon_to_closest_bubble > X_TOO_FAR_FOR_SHOOTING:
-            return (agent_dist/PLAYER_SPEED + dist_from_weapon_to_closest_bubble)
+            return (agent_dist + (SHOOT_FACTOR*dist_from_weapon_to_closest_bubble))/PLAYER_SPEED
 
     return agent_dist/PLAYER_SPEED
 
