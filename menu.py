@@ -4,8 +4,20 @@ from settings import *
 
 
 class MenuOption (pygame.font.Font):
+    """
+    a MenuOption object class
+    """
     def __init__(self, text, function,
                  position=(0, 0), font=None, font_size=36, font_color=WHITE):
+        """
+        constructs a new menu option class with the given arguments
+        :param text:
+        :param function:
+        :param position:
+        :param font:
+        :param font_size:
+        :param font_color:
+        """
         pygame.font.Font.__init__(self, font, font_size)
         self.text = text
         self.function = function
@@ -17,20 +29,40 @@ class MenuOption (pygame.font.Font):
         self.is_selected = False
 
     def set_position(self, x, y):
+        """
+        sets the position of the menu option
+        :param x:
+        :param y:
+        :return:
+        """
         self.position = (x, y)
         self.rect = self.label.get_rect(left=x, top=y)
 
     def highlight(self, color=RED):
+        """
+        highlights the given menu option in given color
+        :param color:
+        :return:
+        """
         self.font_color = color
         self.label = self.render(self.text, 1, self.font_color)
         self.is_selected = True
 
     def unhighlight(self):
+        """
+        stop highliighting given menu option
+        :return:
+        """
         self.font_color = WHITE
         self.label = self.render(self.text, 1, self.font_color)
         self.is_selected = False
 
     def check_for_mouse_selection(self, mouse_pos):
+        """
+        if mouse is  hovering over the menu option, highight it. otherwis, don't
+        :param mouse_pos:
+        :return:
+        """
         if self.rect.collidepoint(mouse_pos):
             self.highlight()
         else:
@@ -38,7 +70,17 @@ class MenuOption (pygame.font.Font):
 
 
 class Menu():
+    """
+    the main menu of the game
+    """
     def __init__(self, screen, functions, bg_color=BLACK, image_name='1_bubble_trouble.png'):
+        """
+        creates a new main menu with given arguments
+        :param screen:
+        :param functions:
+        :param bg_color:
+        :param image_name:
+        """
         self.is_active = True
         self.screen = screen
         self.scr_width = self.screen.get_rect().width
@@ -62,6 +104,10 @@ class Menu():
             self.options.append(menu_option)
 
     def draw(self):
+        """
+        draws the main menu
+        :return:
+        """
         #self.screen.fill(self.image)
         self.screen.blit(self.image,(0,0))
         for option in self.options:
