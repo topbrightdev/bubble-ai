@@ -1,0 +1,16 @@
+Bubble trouble is a popular computer game where the purpose of the game is to destroy dangerous bubbles,
+that bounce around the screen, by splitting them into smaller components and finally destroying them altogether.
+This project includes the logic and gui of the game, as well as an A* agent that plays this game.
+####
+the menus, gui and general game flow is covered by main.py, menu.py, gui.py, settings.py, handle_ai_event.py.
+Game objects are described in the files bonuses.py, bubbles.py, game.y, player.py, weapon.py.
+The A* algorithm controlling the agent is defined in files a_star,a_star_utils, heuristics.py.
+data collection used for analysis is done by create_data.py
+####
+Yarden Tal 203730700
+Elad Shoham 203307129
+Netta Barak 204635593
+
+
+
+
