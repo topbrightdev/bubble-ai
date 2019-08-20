@@ -6,7 +6,7 @@ from handle_ai_event import *
 total_open_nodes = 0
 
 
-def init_gui():
+def init_gui(heuristic):
     """
     starts gui for game
     :return:
@@ -27,7 +27,10 @@ def init_gui():
                 ('Quit', quit_game)]
         )
     )
-    levels_available = [(str(lvl), (start_level, lvl))
+    def start_level_with_heuristic(level, game, font, clock, screen, main_menu, load_level_menu):
+        return start_level(level, game, font, clock, screen, main_menu, load_level_menu, heuristic=heuristic)
+
+    levels_available = [(str(lvl), (start_level_with_heuristic, lvl))
                         for lvl in range(1, game.max_level_available + 1)]
     levels_available.append(('Back', back))
     load_level_menu = Menu(screen, OrderedDict(levels_available))

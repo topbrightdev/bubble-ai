@@ -1,40 +1,42 @@
 from gui import *
+import sys
 
 
-def start_player_game():
-    game, font, clock, screen, main_menu, load_level_menu = init_gui()
+def start_player_game(heuristic):
+    game, font, clock, screen, main_menu, load_level_menu = init_gui(heuristic=heuristic)
     start_main_menu(game, font, clock, screen, main_menu, load_level_menu)
 
 
 ## Create Data
 def run_ai_game_and_return_data(level, heuristic, is_goal_func):
-    game, font, clock, screen, main_menu, load_level_menu = init_gui()
+    game, font, clock, screen, main_menu, load_level_menu = init_gui(heuristic=heuristic)
     game.is_ai = True
     return start_level(level, game, font, clock, screen, main_menu, load_level_menu, heuristic=heuristic, calc_stats=True, is_goal_func=is_goal_func)
 
 
-## NN
-def start_nn_game(level):
-    game, font, clock, screen, main_menu, load_level_menu = init_gui()
-    return start_nn_level(level, game, font, clock, screen, main_menu, load_level_menu)
-
-
-def start_nn_game_without_gui(level):
-    game = Game()
-    game.is_ai = True
-    game.is_nn = True
-    game.load_level(level)
-    return game
-
-
-def start_nn_level(level, game, font, clock, screen, main_menu, load_level_menu):
-    game.is_ai = True
-    game.is_nn = True
-    game.load_level(level)
-    main_menu.is_active = False
-    pygame.mouse.set_visible(False)
-    return game, font, clock, screen, main_menu, load_level_menu
-
 if __name__ == '__main__':
-    start_player_game()
-
+    if len(sys.argv) < 2:
+        heuristic = bonus_and_ball_but_not_too_close_heuristic
+    else:
+        heuristic = sys.argv[1]
+        if heuristic == 'zero':
+            heuristic = zero_heuristic
+        elif heuristic == 'x_axis':
+            heuristic = stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic
+        elif heuristic == 'both_axes':
+            heuristic = stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic
+        elif heuristic == 'time':
+            heuristic = time_from_bubble_and_player
+        elif heuristic == 'bonus':
+            heuristic = bonus_and_ball_but_not_too_close_heuristic
+        elif heuristic == 'center':
+            heuristic = stay_in_center_heuristic
+        elif heuristic == 'small_balls':
+            heuristic = shoot_on_small_balls_heuristic
+        elif heuristic == 'shoot':
+            heuristic = shoot_heuristic
+        else:
+            print('please choose heuristic from the list,\nif you dont know what to choose, '
+                  'keep this arg empty.\n\nThe list:\nzero\nx_axis\nboth_axes\ntime\nbonus\ncenter\nsmall_balls\nshoot')
+            exit()
+    start_player_game(heuristic=heuristic)
