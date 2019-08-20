@@ -11,6 +11,8 @@ from bubbles import *
 from player import *
 from bonuses import *
 from settings import *
+import copy
+from copy import *
 
 
 class Game:

@@ -1,5 +1,7 @@
 import pygame
 from settings import *
+import copy
+from copy import *
 
 
 class Weapon(pygame.sprite.Sprite):

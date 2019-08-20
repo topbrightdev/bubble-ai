@@ -1,4 +1,6 @@
 from weapon import *
+import copy
+from copy import *
 
 
 class Player(pygame.sprite.Sprite):

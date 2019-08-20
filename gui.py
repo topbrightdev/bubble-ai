@@ -4,6 +4,8 @@ from collections import OrderedDict
 from menu import *
 from handle_ai_event import *
 total_open_nodes = 0
+import copy
+from copy import *
 
 
 def init_gui(heuristic):

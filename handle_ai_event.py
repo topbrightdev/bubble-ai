@@ -3,6 +3,8 @@ from game import *
 from heuristics import *
 from settings import *
 from a_star_utils import *
+import copy
+from copy import *
 
 ai_spot_counter = 0
 ai_path_size = 0

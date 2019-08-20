@@ -1,6 +1,8 @@
 import pygame
 
 from settings import *
+import copy
+from copy import *
 
 
 class MenuOption (pygame.font.Font):
