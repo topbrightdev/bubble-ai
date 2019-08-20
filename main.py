@@ -3,12 +3,24 @@ import sys
 
 
 def start_player_game(heuristic):
+    """
+    starts a new game (not for data collection)
+    :param heuristic:
+    :return:
+    """
     game, font, clock, screen, main_menu, load_level_menu = init_gui(heuristic=heuristic)
     start_main_menu(game, font, clock, screen, main_menu, load_level_menu)
 
 
 ## Create Data
 def run_ai_game_and_return_data(level, heuristic, is_goal_func):
+    """
+    starts a game for data collection
+    :param level: level to start with
+    :param heuristic: the heuristic to be used
+    :param is_goal_func: goal function
+    :return:
+    """
     game, font, clock, screen, main_menu, load_level_menu = init_gui(heuristic=heuristic)
     game.is_ai = True
     return start_level(level, game, font, clock, screen, main_menu, load_level_menu, heuristic=heuristic, calc_stats=True, is_goal_func=is_goal_func)
