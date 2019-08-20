@@ -19,7 +19,7 @@ def zero_heuristic(game, start):
     ZERO
     a base line heuristic
     :param game: the current game state
-    :param start: the start game state for th current A* call
+    :param start: the start game state for the current A* call
     :return: zero
     """
     return 0
@@ -30,7 +30,7 @@ def stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic(game, st
     X AXIS
     follow bubbles and avoid danger in x axis
     :param game: the current game state
-    :param start: the start game state for th current A* call
+    :param start: the start game state for the current A* call
     :return:0 if goal.very high value that depends on agents distance from ball in x axis if it's < DANGER_X_DIST_FROM_BUBBLE.
      otherwise - agents distance from ball in x axis/PLAYER_SPEED/
     """
@@ -49,7 +49,7 @@ def stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic(game,
     BOTH AXES
     follow bubbles and avoid danger in x axis considering Y axis as well
     :param game: the current game state
-    :param start: the start game state for th current A* call
+    :param start: the start game state for the current A* call
     :return:0 if goal.very high value that depends on agents distance from ball in both axes if it's < DANGER_X_DIST_FROM_BUBBLE.
      otherwise - agents distance from ball in x axis/PLAYER_SPEED/
     """
@@ -68,7 +68,7 @@ def stay_in_ball_area_but_not_too_close_heuristic_time_admissible(game, start):
     TIME
     follow bubbles and bonuses and avoid danger in by worst case scenario time to collision
     :param game: the current game state
-    :param start: the start game state for th current A* call
+    :param start: the start game state for the current A* call
     :return:0 if goal. very high value if time eo collision is very small. otherwise - the min of the time it'll take
     the player to catch bonus and the time it'll take a ball to reach the shot.
     """
@@ -101,7 +101,7 @@ def bonus_and_ball_but_not_too_close_heuristic(game, start):
     BONUS
     follow bubbles and avoid danger in x axis, while trying to collect bonuses if exist.
     :param game: the current game state
-    :param start: the start game state for th current A* call
+    :param start: the start game state for the current A* call
     :return: 0 if goal.very high value that depends on agents distance from ball in x axis if it's < DANGER_X_DIST_FROM_BUBBLE.
      otherwise - dist_from_bonus/PLAYER_SPEED if bonus exists and  dist_from_bonus/PLAYER_SPEED if there are no bonuses.
     """
@@ -124,7 +124,7 @@ def stay_in_center_heuristic(game, start):
     CENTER
     follow bubbles and avoid danger in x axis while trying to avoid the edges of the screen
     :param game: the current game state
-    :param start: the start game state for th current A* call
+    :param start: the start game state for the current A* call
     :return: 0 if goal.very high value that depends on agents distance from ball in x axis if it's < DANGER_X_DIST_FROM_BUBBLE.
      otherwise - dist_from_center/PLAYER_SPEED if player is in the right/left quarters of the screen and
      dist_from_bonus/PLAYER_SPEED if it's in the middle half.
@@ -150,7 +150,7 @@ def shoot_on_small_balls_heuristic(game, start):
     SMALL BALLS
     follow small bubbles and avoid danger in x axis
     :param game: the current game state
-    :param start: the start game state for th current A* call
+    :param start: the start game state for the current A* call
     :return:0 if goal.very high value that depends on agents distance from ball in x axis if it's < DANGER_X_DIST_FROM_BUBBLE.
      otherwise - agents distance from a ball of minimal size in x axis/PLAYER_SPEED
     """
@@ -174,7 +174,7 @@ def shoot_heuristic(game, start):
     SHOOT
     follow bubbles and avoid danger in x axis, while trying to shoot only when the weapon is close to a bubble
     :param game: the current game state
-    :param start: the start game state for th current A* call
+    :param start: the start game state for the current A* call
     :return:0 if goal.very high value that depends on agents distance from ball in x axis if it's < DANGER_X_DIST_FROM_BUBBLE.
     if there is a shot in the air and it's too far from a buuble - a very high value that depends on the agent's distance
     from the closest bubble and the shot's distance from the closest bubble
@@ -248,18 +248,33 @@ def find_the_distance_from_the_closest_bubble(game, index = 0):
 
 
 def find_euclidian_closest_bubble_from_list(game, bubbles_list):
+    """
+
+    :param game:
+    :param bubbles_list:
+    :return: euclidean distance of agent and closest bubble from bubbles_list
+    """
     bubbles_dist = [euclidean_dist_bubble_and_player(bubble, game.players[0]) for bubble in bubbles_list]
     min_dist_bubble_index = int(np.argmin(np.array(bubbles_dist)))
     return bubbles_list[min_dist_bubble_index], bubbles_dist[min_dist_bubble_index]
 
 
 def find_x_axis_closest_bubble_from_list(game, bubbles_list):
+    """
+    :param game:
+    :param bubbles_list:
+    :return: X axis distance of agent and closest bubble from bubbles_list
+    """
     bubbles_dist = [dist_from_bubble_and_player(bubble, game.players[0], axis=0) for bubble in bubbles_list]
     min_dist_bubble_index = int(np.argmin(np.array(bubbles_dist)))
     return bubbles_list[min_dist_bubble_index], bubbles_dist[min_dist_bubble_index]
 
 
 def find_the_distance_from_the_closest_smallest_ball_x_axis(game):
+    """
+    :param game:
+    :return: X axis distance of agent and closest bubble of minimal size
+    """
     bubbles = game.balls + game.hexagons
     min_size = min([bubble.size for bubble in bubbles])
     small_bubbles = [bubble for bubble in bubbles if bubble.size == min_size]
@@ -267,6 +282,13 @@ def find_the_distance_from_the_closest_smallest_ball_x_axis(game):
 
 
 def time_from_bubble_and_player(game, bubble, axis=0, player_index=0):
+    """
+    :param game:
+    :param bubble:
+    :param axis:
+    :param player_index:
+    :return: the time to worst case scenario collision between bubble and player number  player_index
+    """
     dist_from_bubble = dist_from_bubble_and_player(bubble, game.players[0], axis)
     bubble_axis_speed = abs(bubble.speed[axis])
     if axis == 0:
@@ -282,6 +304,13 @@ def time_from_bubble_and_player(game, bubble, axis=0, player_index=0):
 
 
 def dist_from_bubble_and_player(bubble, player, axis=0):
+    """
+
+    :param bubble:
+    :param player:
+    :param axis:
+    :return: dist of player from bubble in axis
+    """
     if axis == 0:
         player_spot = player.rect.centerx
         pos_bubble_spot = bubble.rect.left
@@ -292,15 +321,30 @@ def dist_from_bubble_and_player(bubble, player, axis=0):
 
 
 def euclidean_dist_bubble_and_player(bubble, player):
+    """
+    :param bubble:
+    :param player:
+    :return: euclidean dist of player from bubble
+    """
     return math.sqrt(math.pow(dist_from_bubble_and_player(bubble, player, 0),2) + math.pow(dist_from_bubble_and_player(bubble, player, 1),2))
 
 
 def get_time_to_closest_bubble(game, player_index=0):
+    """
+
+    :param game:
+    :param player_index:
+    :return: time to closest bubble
+    """
     return min([max(time_from_bubble_and_player(game, cur_bubble, 0, player_index),
                     time_from_bubble_and_player(game, cur_bubble, 1, player_index)) for cur_bubble in game.balls + game.hexagons])
 
 
 def pick_up_bonuses(game):
+    """
+    :param game:
+    :return: distance from closest bonus
+    """
     distance_from_closest_bonus = WINDOWWIDTH + 1
     if len(game.bonuses) == 0:
         return distance_from_closest_bonus
