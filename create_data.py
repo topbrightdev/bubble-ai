@@ -5,17 +5,19 @@ from heuristics import *
 
 ALL_HEURISTICS = [
     (stay_in_ball_area_but_not_too_close_heuristic_time_admissible, "stay_in_ball_area_but_not_too_close_heuristic_time_admissible"),
-    # (stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic"),
-    # (stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic"),
-    # (bonus_and_ball_but_not_too_close_heuristic, "bonus_and_ball_but_not_too_close_heuristic"),
-    # (stay_in_center_heuristic, "stay_in_center_heuristic"),
-    # (shoot_on_small_balls_heuristic, "shoot_on_small_balls_heuristic"),
-    # (shoot_heuristic, "shoot_heuristic"),
-    # (zero_heuristic, "zero_heuristic")
+    (stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_x_axis_not_admissible_heuristic"),
+    (stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic, "stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic"),
+    (bonus_and_ball_but_not_too_close_heuristic, "bonus_and_ball_but_not_too_close_heuristic"),
+    (stay_in_center_heuristic, "stay_in_center_heuristic"),
+    (shoot_on_small_balls_heuristic, "shoot_on_small_balls_heuristic"),
+    (shoot_heuristic, "shoot_heuristic"),
+    (zero_heuristic, "zero_heuristic")
     ]
-IS_GOAL_FUNC = is_sub_goal_steps_score_bonuses
-MAX_STEPS_OPTION = list(range(6,7))
+
+MAX_STEPS_OPTION = list(range(1,11))
 NUM_OF_LOOPS_FOR_EACH_HEURISTIC = 10
+# goal func, to run stats of
+IS_GOAL_FUNC = is_sub_goal_steps_score_bonuses
 
 HEURISTIC_FOLDER = 'heuristics_data/'
 CSV_SUF = '.csv'
@@ -41,6 +43,11 @@ HEURISTIC_COL = 'heuristic'
 
 
 def generate_data_from_csv(file_path):
+    """
+    generate all heuristics data from a given path.
+    :param file_path: path to a csv file, that contains heuristics data - created by create_heuristic_data
+    :return: dataframe that represent the data
+    """
     df = pd.read_csv(file_path)
     total_open_nodes = df[OPEN_NODES_AXIS].sum()
     max_open_nodes = df[OPEN_NODES_AXIS].max()
@@ -68,6 +75,14 @@ def generate_data_from_csv(file_path):
 
 
 def create_heuristic_data(heuristic, file_path, is_goal_func, max_steps):
+    """
+    create heuristic statistics data, save as csv file, and return the resulted dataframe
+    :param heuristic: heuristic to calc stats on
+    :param file_path: a path to save the csv data to
+    :param is_goal_func: goal function to calc data on
+    :param max_steps: max a_star depth
+    :return: a dataframe representing the data
+    """
     STARTING_LEVEL = 1
     cur_goal_func = lambda x, y: is_goal_func(x, y, max_steps)
     list_of_open_nodes, final_level, final_score, player_dies_count, final_lives = \
@@ -86,6 +101,12 @@ def create_heuristic_data(heuristic, file_path, is_goal_func, max_steps):
 
 
 def create_list_of_heuristics_data(heuristics):
+    """
+    create heuristics statistics data, from a given heuristic list.
+    save the data as csv file, and return the resulted dataframe
+    :param heuristics: heuristic to calc stats on
+    :return: a dataframe representing the data
+    """
     all_heuristics_df = pd.DataFrame(columns=[TOTAL_OPEN_NODES, MAX_OPEN_NODES, MEAN_OPEN_NODES, COUNT_OPEN_NODES,
                                             MEDIAN_OPEN_NODES, FINAL_LEVEL, FINAL_SCORE, MAX_PATH_SIZE_COL, PLAYER_DIES_COUNT, FINAL_PLAYER_LIVES, HEURISTIC_COL])
     for (heuristic, heuristic_name) in heuristics:
@@ -110,14 +131,17 @@ def create_list_of_heuristics_data(heuristics):
 
     all_heuristics_file_path = HEURISTIC_FOLDER + FINAL_DF_NAME + CSV_SUF
     ensure_dir_exists(all_heuristics_file_path)
-    # all_heuristics_df.to_csv(all_heuristics_file_path, index=False)
+    all_heuristics_df.to_csv(all_heuristics_file_path, index=False)
 
-    # final_df = pd.read_csv(all_heuristics_file_path)
-    pass
-
+    return pd.read_csv(all_heuristics_file_path)
 
 
 def ensure_dir_exists(file_path):
+    """
+    ensure that the given path exists, and if not - create the path
+    :param file_path: path to file
+    :return: None
+    """
     if not os.path.exists(os.path.dirname(file_path)):
         os.makedirs(os.path.dirname(file_path))
 
