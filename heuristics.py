@@ -66,11 +66,12 @@ def stay_in_ball_area_but_not_too_close_both_axis_not_admissible_heuristic(game,
 def stay_in_ball_area_but_not_too_close_heuristic_time_admissible(game, start):
     """
     TIME
-    follow bubbles and bonuses and avoid danger in by worst case scenario time to collision
-    :param game: the current game state
-    :param start: the start game state for th current A* call
-    :return:0 if goal. very high value if time eo collision is very small. otherwise - the min of the time it'll take
-    the player to catch bonus and the time it'll take a ball to reach the shot.
+    follow bubbles and bonuses and avoid danger in by worst case scenario time to collision.
+    :param game: the current game state.
+    :param start: the start game state for the current A* call.
+    :return: very high value if time to collision is very small (danger state). 0 if goal is reached.
+     otherwise - the min of the time it'll take the player to catch bonus and the time it'll take a ball to reach the
+      shot.
     """
     if not game.balls and not game.hexagons:
         return 0
