@@ -57,7 +57,7 @@ def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
     """
     if calc_stats:
         player_dies_count = 0
-        cur_level = level # TODO
+        cur_level = level
         list_of_open_nodes = []
     game.load_level(level)
     main_menu.is_active = False
@@ -65,12 +65,12 @@ def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
     while game.is_running:
         game.update()
         if calc_stats:
-            if game.level_completed or game.is_completed: # TODO
-                print("------------------Finished level %s------------------" % cur_level) # TODO
-                cur_level += 1 # TODO
+            if game.level_completed or game.is_completed:
+                print("------------------Finished level %s------------------" % cur_level)
+                cur_level += 1
             if game.dead_player:
                 player_dies_count += 1
-                print("------------------Player dead %s------------------" % player_dies_count) # TODO
+                print("------------------Player dead %s------------------" % player_dies_count)
             if game.is_completed or game.game_over:
                 final_score = game.get_score()
                 final_lives = game.players[0].lives
@@ -79,11 +79,11 @@ def start_level(level, game, font, clock, screen, main_menu, load_level_menu,
         pygame.display.update()
         if calc_stats:
             cur_open_nodes = handle_game_event(game, font, clock, screen, main_menu, load_level_menu, heuristic,
-                                               calc_stats, is_goal_func) # TODO
+                                               calc_stats, is_goal_func)
             if cur_open_nodes != 0:
-                list_of_open_nodes.append(cur_open_nodes) # TODO
+                list_of_open_nodes.append(cur_open_nodes)
         else:
-            handle_game_event(game, font, clock, screen, main_menu, load_level_menu, heuristic=heuristic, is_goal_func=is_goal_func) # TODO
+            handle_game_event(game, font, clock, screen, main_menu, load_level_menu, heuristic=heuristic, is_goal_func=is_goal_func)
         if game.is_completed or game.game_over or \
                 game.level_completed or game.is_restarted:
             pygame.time.delay(3000)
@@ -369,7 +369,6 @@ def draw_world(game, font, clock, screen, main_menu, load_level_menu):
     :param load_level_menu:
     :return:
     """
-    #screen.fill(WHITE)
     image = pygame.image.load(IMAGES_PATH + 'background_level.png')
     screen.blit(image,(0,0))
     for hexagon in game.hexagons:
@@ -434,10 +433,6 @@ def handle_game_event(game, font, clock, screen, main_menu, load_level_menu, heu
         open_nodes = handle_ai_game_event(game, font, clock, screen, main_menu, load_level_menu, heuristic, is_goal_func)
         total_open_nodes += open_nodes
         return open_nodes
-        # for event in pygame.event.get():
-        #     # TODO maybe dont need quit option
-        #     if event.type == KEYDOWN and event.key == K_ESCAPE:
-        #         quit_game(game, font, clock, screen, main_menu, load_level_menu)
     else:
         for event in pygame.event.get():
             if event.type == KEYDOWN:

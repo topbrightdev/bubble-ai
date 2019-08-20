@@ -297,7 +297,6 @@ def time_from_bubble_and_player(game, bubble, axis=0, player_index=0):
         total_speed = max(PLAYER_SPEED + bubble_axis_speed, 1)
     else:
         if bubble.image_name == BALL_IMAGE_NAME:
-            # TODO: it's for addmissable
             total_speed = max(bubble_axis_speed + 2 * np.sqrt(dist_from_bubble), 1)
         else:
             total_speed = max(bubble_axis_speed, 1)

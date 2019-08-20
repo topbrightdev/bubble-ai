@@ -25,7 +25,6 @@ def a_star(start, is_goal, heuristic, g_function):
         open_nodes += 1
         if is_goal(current, start):
             path, path_size = reconstruct_path(came_from, current)
-            # print(open_nodes)
             return path, path_size, open_nodes
 
         visited_set.add(current)
@@ -34,7 +33,6 @@ def a_star(start, is_goal, heuristic, g_function):
         for child in list_of_childs:
             child_node, child_action = child
             if child_node.dead_player or child_node in visited_set:
-                # TODO visited_child will never reached (this isn't the same object, we need to calculate equal game function)
                 continue
 
             g = g_function(child_node, start)
@@ -43,13 +41,11 @@ def a_star(start, is_goal, heuristic, g_function):
                 h = heuristic(child_node, start)
                 child_node.update_h_score(h)
             elif g <= child_node.get_g_score(): # if we already discovered this node, with better g
-                # TODO it will never reached (this isn't the same object, we need to calculate equal game function)
                 continue
 
             # This path is the best until now
             came_from[child_node] = [current, child_action]
             child_node.update_g_score(g)
-    print(open_nodes)
     # if we get here - return default (empty) path
     return path, path_size, open_nodes
 
