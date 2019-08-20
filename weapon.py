@@ -1,6 +1,5 @@
 import pygame
 from settings import *
-from copy import copy, deepcopy
 
 
 class Weapon(pygame.sprite.Sprite):
